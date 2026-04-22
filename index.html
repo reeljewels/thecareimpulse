@@ -4,32 +4,53 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>The Care Impulse — Ginny L. Sayre</title>
-  <link rel="icon" type="image/png" href="./favicon.png?v=1">
-<link rel="apple-touch-icon" href="./favicon.png?v=1">
+  <link rel="icon" type="image/png" href="./favicon.png?v=1" />
+  <link rel="apple-touch-icon" href="./favicon.png?v=1" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
     html, body {
-      height: 100%;
       margin: 0;
+      padding: 0;
+      min-height: 100%;
+    }
+    body {
       font-family: "Georgia", serif;
       background: #faf9f7;
       color: #222;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
+      min-height: 100vh;
+      padding: 3rem 2rem 1rem;
       text-align: center;
-      padding: 2rem;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .logo {
+      width: 200px;
+      height: 200px;
+      max-width: 60vw;
+      max-height: 60vw;
+      margin-bottom: 1rem;
     }
     h1 {
       font-size: 1.5rem;
-      margin-bottom: 0.5rem;
+      margin: 0 0 0.5rem;
       letter-spacing: 0.03em;
     }
     h2 {
       font-weight: normal;
       font-size: 1.2rem;
       color: #555;
-      margin-top: 0;
+      margin: 0.2rem 0;
     }
     p {
       max-width: 550px;
@@ -40,34 +61,37 @@
     a {
       color: #b35a00;
       text-decoration: none;
-      border-bottom: 1px solid rgba(179,90,0,0.3);
+      border-bottom: 1px solid rgba(179, 90, 0, 0.3);
       transition: color 0.2s ease;
     }
     a:hover {
       color: #e06b00;
     }
     footer {
-      margin-top: 2rem;
       font-size: 0.9rem;
       color: #777;
+      padding-top: 2rem;
     }
   </style>
 </head>
 <body>
   <main>
-   <img src="logo.png" alt="The Care Impulse Logo" style="width:200px;height:200px;">
+    <img src="logo.png" alt="The Care Impulse logo" class="logo" />
     <h1>The Care Impulse</h1>
     <h2>Learning How to Beat Self-Erasure</h2>
     <h2>by Ginny L. Sayre</h2>
     <p>
-      A book about love, labor, and the hidden cost of care.<br/>
-      <em>Where resonance meets recognition</em>
+      A book about love, labor, and the hidden cost of care.<br />
+      <em>Where resonance meets recognition.</em>
     </p>
     <p>
-      Long form cultural essays at <a href="https://substack.com/@reeljewels" target="_blank" rel="noopener">ReelJewels Revisited</a>.
+      Long-form cultural essays at
+      <a href="https://substack.com/@reeljewels" target="_blank" rel="noopener">ReelJewels Revisited</a>.
+    </p>
   </main>
   <footer>
-    &copy; 2026 Ginny L. Sayre&nbsp;&mdash;&nbsp;All rights reserved.
+    &copy; 2026 Ginny L. Sayre &mdash; All rights reserved.
   </footer>
 </body>
 </html>
+
