@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Asking What Caregivers Agreed To | The Care Impulse</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20400%22%3E%3Cg%20transform%3D%22translate%280%2090%29%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20stroke%3D%22%232B6696%22%20stroke-width%3D%2218%22%20d%3D%22M10%20150%20H48%20L62%2052%20L78%20205%20L92%20122%20L104%20156%20H186%20L150%20116%20C118%2084%20126%2026%20165%2024%20C186%2023%20197%2038%20200%2052%20C203%2038%20214%2023%20235%2024%20C274%2026%20282%2084%20250%20116%20L214%20156%20H296%20L312%20182%20L330%2050%20L346%20160%20L356%20150%20H390%22%2F%3E%3Cpath%20stroke%3D%22%23E3F2FB%22%20stroke-width%3D%226%22%20d%3D%22M10%20150%20H48%20L62%2052%20L78%20205%20L92%20122%20L104%20156%20H186%20L150%20116%20C118%2084%20126%2026%20165%2024%20C186%2023%20197%2038%20200%2052%20C203%2038%20214%2023%20235%2024%20C274%2026%20282%2084%20250%20116%20L214%20156%20H296%20L312%20182%20L330%2050%20L346%20160%20L356%20150%20H390%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+<meta name="description" content="A proposed amendment to California’s hospital family caregiver law, so the chart records what a caregiver agreed to do, not just who they are.">
+<meta property="og:title" content="Asking What Caregivers Agreed To">
+<meta property="og:description" content="California’s CARE Act records who the caregiver is. It should also record what they agreed to do.">
+<meta property="og:url" content="https://thecareimpulse.com/care-act/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAF8F6; --surface:#FFFFFF; --sunk:#F2EEE9; --ink:#222222; --muted:#5C5752; --line:#E3DDD6;
+  --accent:#2B6696; --accent-ink:#FFFFFF; --accent-soft:#DDEBF6; --link:#9E561A; --logo-out:#9CCAE6; --logo-in:#E3F2FB;
+  --serif:Georgia, "Times New Roman", serif;
+  --sans:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  color-scheme: light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16181B; --surface:#1E2125; --sunk:#262A2F; --ink:#ECE8E2; --muted:#ABA49C; --line:#363B41;
+    --accent:#8CC3EA; --accent-ink:#16181B; --accent-soft:#22384A; --link:#E3A86E; --logo-out:#5E9CC4; --logo-in:#2A4A60;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16181B; --surface:#1E2125; --sunk:#262A2F; --ink:#ECE8E2; --muted:#ABA49C; --line:#363B41;
+  --accent:#8CC3EA; --accent-ink:#16181B; --accent-soft:#22384A; --link:#E3A86E; --logo-out:#5E9CC4; --logo-in:#2A4A60;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.6}
+a{color:var(--link);text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 64px}
+header{text-align:center;padding:36px 0 8px}
+.logo{display:block;width:min(200px,55%);height:auto;margin:0 auto 18px}
+.kicker{font-family:var(--serif);color:var(--muted);font-size:16px;margin:0 0 6px}
+.kicker a{color:var(--muted)}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,5.5vw,40px);line-height:1.15;margin:0 0 12px}
+.sub{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:19px;margin:0 auto;max-width:44ch}
+.byline{color:var(--muted);font-size:15px;margin:14px 0 0}
+.lead{margin:30px auto 0;max-width:36ch;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.45;text-align:center}
+h2{font-family:var(--serif);font-weight:700;font-size:25px;line-height:1.25;margin:44px 0 10px}
+p{margin:0 0 16px}
+ul,ol{padding-left:22px;margin:0 0 16px}
+li{margin-bottom:8px}
+.table-wrap{overflow-x:auto;margin:8px 0 22px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:16px;min-width:560px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font-size:14px;color:var(--muted);background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+.rec{margin:0 0 18px}
+.rec strong{font-family:var(--serif)}
+.callout{background:var(--accent-soft);border-radius:12px;padding:18px 20px;margin:24px 0}
+.callout p:last-child{margin:0}
+.signup{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px 22px;margin:44px 0 0;text-align:center}
+.signup h2{margin-top:0}
+.signup iframe{width:100%;max-width:480px;height:320px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-ink);font-weight:700;text-decoration:none;padding:11px 18px;border-radius:10px}
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 0;text-align:left}
+@media (max-width:560px){.paths{grid-template-columns:1fr}}
+.path{background:var(--sunk);border-radius:10px;padding:14px 16px;font-size:16px}
+.sources{font-size:15px;color:var(--muted)}
+footer{margin-top:48px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:15px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg class="logo" viewBox="0 0 400 220" role="img" aria-label="The Care Impulse"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><path style="stroke:var(--logo-out)" stroke-width="12" d="M10 150 H48 L62 52 L78 205 L92 122 L104 156 H186 L150 116 C118 84 126 26 165 24 C186 23 197 38 200 52 C203 38 214 23 235 24 C274 26 282 84 250 116 L214 156 H296 L312 182 L330 50 L346 160 L356 150 H390"/><path style="stroke:var(--logo-in)" stroke-width="5" d="M10 150 H48 L62 52 L78 205 L92 122 L104 156 H186 L150 116 C118 84 126 26 165 24 C186 23 197 38 200 52 C203 38 214 23 235 24 C274 26 282 84 250 116 L214 156 H296 L312 182 L330 50 L346 160 L356 150 H390"/></g></svg>
+    <p class="kicker"><a href="/">The Care Impulse</a> · California policy brief</p>
+    <h1>Asking What Caregivers Agreed To</h1>
+    <p class="sub">A proposed amendment to California’s hospital family caregiver law (Health and Safety Code section 1262.5)</p>
+    <p class="byline">Ginny Lee Sayre · Cupertino, California · November 2026</p>
+  </header>
+
+  <p class="lead">California records who the family caregiver is. It should also record what they agreed to do.</p>
+
+  <h2>The gap</h2>
+  <p>California’s hospital family caregiver law, SB 675 (Liu, 2015), amended Health and Safety Code section 1262.5. Since 2016 it has required hospitals to give each admitted inpatient the opportunity to identify a family caregiver, to notify that caregiver of discharge, and to inform them of the patient’s continuing care needs. AARP championed it as part of its national CARE Act campaign, and it passed without opposition.</p>
+  <p>The law records <em>who</em> the caregiver is. It never records <em>what that person agreed to do</em>. A family member named as someone who may assist can leave the hospital instructed in wound care, injections, or equipment, with no record of whether they are able or willing to provide it. The result is presumed consent written into the discharge process.</p>
+  <p>Verbal limits don’t survive. A caregiver can tell the team in rounds that the patient manages a task independently, and an earlier note in the chart can still assign that task to the caregiver. Without a recorded statement, the oldest assumption wins.</p>
+  <p>Other places already ask. Since 2018, Scotland has required every adult carer support plan to record “the extent to which the adult carer is able and willing to provide care,” along with emergency arrangements and the circumstances in which the plan will be reviewed (<a href="https://www.legislation.gov.uk/asp/2016/9/section/9">Carers (Scotland) Act 2016, section 9</a>). England’s Care Act 2014 requires carer assessments to consider whether the carer is able and willing to provide care, and whether they are likely to continue to be (<a href="https://www.legislation.gov.uk/ukpga/2014/23/section/10">section 10</a>). But both models wait for the institution to start the process, and in a 2025 Carers UK survey, 73 percent of carers in England reported no carer’s assessment in the previous year. This amendment builds on that lesson: the caregiver’s own written statement counts, and the most recent one controls, whether or not anyone got around to asking.</p>
+
+  <h2>The proposed amendment</h2>
+  <p>Three changes to section 1262.5, each building on what the law already does:</p>
+  <ol>
+    <li><strong>Ask.</strong> When a family caregiver is identified, give them the opportunity to state in writing which posthospital care tasks they are willing to perform, any limits, and any tasks they decline or have not been trained for. Record the statement in the patient’s medical record.</li>
+    <li><strong>Plan for the gaps.</strong> The law already requires appropriate arrangements for posthospital care. Tasks the caregiver declines or isn’t trained for must be covered by those arrangements, not quietly reassigned to the caregiver.</li>
+    <li><strong>Keep it current.</strong> Being designated as a family caregiver is not agreement to perform any particular task, and the caregiver’s most recent statement replaces older chart notes about their role.</li>
+  </ol>
+  <p>None of this would delay discharge. The law already provides that hospitals need not adopt policies that delay a patient’s discharge, and the amendment keeps that rule: completing the statement is the caregiver’s option, never a condition of the patient leaving.</p>
+  <div class="callout">
+    <p><strong>Illustrative language</strong> (for Legislative Counsel to draft properly):</p>
+    <p>(x) When a patient identifies a family caregiver, the hospital shall offer the family caregiver the opportunity to state, in writing, which posthospital care tasks the family caregiver is willing to perform, any limits on that assistance, and any tasks the family caregiver declines or has not been trained to perform. The hospital shall record the statement in the patient’s medical record.</p>
+    <p>(y) The discharge plan shall identify arrangements for any posthospital care task that the family caregiver has declined or has not been trained to perform. If those arrangements cannot be completed before discharge, the discharge plan shall document the uncovered task and any referral made, and shall not designate the family caregiver as responsible for it. Identification of a family caregiver shall not be construed as that person’s agreement to perform any particular task.</p>
+    <p>(z) A family caregiver’s most recent statement supersedes any earlier statement or notation regarding the family caregiver’s current willingness, availability, and agreed tasks. This subdivision does not alter the historical medical record or establish the family caregiver’s clinical competence. Nothing in this section requires a hospital to delay discharge or conditions discharge on a family caregiver’s completion of a statement.</p>
+  </div>
+  <p>A free, working model of the statement already exists: the <a href="/consent/">Caregiver Scope and Consent Record</a>.</p>
+
+  <h2>Why it matters</h2>
+  <p>This is a patient-safety issue before it is a cost issue. A discharge plan that names an untrained or unwilling caregiver as backup has a gap exactly where the safety net should be, and no one sees the gap until something fails at home. In one family, a chart note still listed the daughter as managing her mother’s infusion pump years after she had handed that task back to her mother, and she had never been trained on the current device. Old notes like that one are why the amendment lets the caregiver’s most recent statement replace earlier ones.</p>
+  <p>When a caregiver goes home unable to do what the hospital assumed, preventable complications and readmissions can follow, and Medicare penalizes hospitals for excess readmissions. When caregivers burn out, patients move into nursing homes, often at Medi-Cal’s expense. A written statement of what the caregiver can actually take on lets the discharge team plan for real coverage before the patient leaves, not after something fails at home. The administrative mechanism is modest: one conversation and one current statement in the chart, incorporated into discharge planning.</p>
+  <p>It would also give future caregiver-credit programs, state or federal, something they currently lack: a record of the caregiver’s stated role that was created at the time, not reconstructed years later. See also <a href="/caregiver-credit/">Strengthening the Social Security Caregiver Credit</a>.</p>
+
+  <h2>Timing</h2>
+  <p>The new legislative session begins in December, and bill ideas for 2027 are taking shape now. This amendment is narrow, inexpensive, and builds on a law that passed without opposition, which makes it a strong candidate for a first-year bill.</p>
+
+  <h2>About the author</h2>
+  <p>Ginny Lee Sayre is a writer in Cupertino and has been her mother’s primary family caregiver for seventeen years. She developed the Caregiver Scope and Consent Record and is the author of the forthcoming book <em>The Care Impulse: Measuring Love, Labor, and Extraction</em>. She welcomes the chance to discuss this proposal with legislative staff.</p>
+
+  <section class="signup" id="signup">
+    <h2>Add your name</h2>
+    <p>Sign up for updates on this proposal and The Care Impulse.</p>
+    <div id="signup-slot"></div>
+    <div class="paths">
+      <div class="path"><strong>For caregivers:</strong> write down what you’re open to helping with, and what you’re not. <a href="/consent/">Use the consent record</a></div>
+      <div class="path"><strong>For legislative staff:</strong> I’d welcome a conversation about this amendment. <a href="mailto:ginnysayre@gmail.com">Get in touch</a></div>
+    </div>
+  </section>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li><a href="https://www.leginfo.ca.gov/pub/15-16/bill/sen/sb_0651-0700/sb_675_bill_20151004_chaptered.htm">SB 675 (Liu, 2015), chaptered text</a></li>
+    <li><a href="https://www.cdph.ca.gov/Programs/CHCQ/LCP/Pages/AFL-15-25.aspx">California Department of Public Health, All Facilities Letter 15-25 on SB 675</a></li>
+    <li><a href="https://www.legislation.gov.uk/asp/2016/9/section/9">Carers (Scotland) Act 2016, section 9: adult carer support plan</a></li>
+    <li><a href="https://www.legislation.gov.uk/ukpga/2014/23/section/10">Care Act 2014 (England), section 10: assessment of a carer’s needs for support</a></li>
+    <li><a href="https://www.carersuk.org/reports/state-of-caring-the-impact-of-caring-on-carers-mental-health-and-the-need-for-support-from-social-care-services">Carers UK, State of Caring 2025</a></li>
+  </ul>
+
+  <footer>
+    <p>© 2026 Ginny Lee Sayre. This brief may be shared and quoted with attribution. · <a href="/">The Care Impulse</a> · <a href="/consent/">Caregiver Scope and Consent Record</a></p>
+  </footer>
+</div>
+
+
+<script>
+  // Paste your Care Impulse Substack address here, e.g. "https://thecareimpulse.substack.com"
+  var SUBSTACK = "https://thecareimpulse.substack.com";
+  (function(){
+    var slot = document.getElementById("signup-slot");
+    if (SUBSTACK) {
+      var f = document.createElement("iframe");
+      f.src = SUBSTACK.replace(/\/$/, "") + "/embed";
+      f.title = "Sign up for updates";
+      f.setAttribute("frameborder","0");
+      f.setAttribute("scrolling","no");
+      slot.appendChild(f);
+    } else {
+      slot.innerHTML = '<p style="color:var(--muted)">Signup coming soon.</p>';
+    }
+  })();
+</script>
+</body>
+</html>
