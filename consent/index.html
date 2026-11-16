@@ -3,7 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Caregiver Scope and Consent Record</title>
+<title>Caregiver Scope and Consent Record | The Care Impulse</title>
+<meta name="description" content="A free tool for unpaid family caregivers to put in writing what they can help with, what they can’t, and for how long. Nothing you enter leaves your device.">
+<meta property="og:title" content="Caregiver Scope and Consent Record">
+<meta property="og:description" content="A patient may name a preferred caregiver. Only the caregiver can agree to the work.">
+<meta property="og:url" content="https://thecareimpulse.com/consent/">
+<meta property="og:image" content="https://thecareimpulse.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Care Impulse: Measuring Love, Labor, and Extraction, by Ginny Lee Sayre">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://thecareimpulse.com/consent/">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20400%22%3E%3Cg%20transform%3D%22translate%280%2090%29%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20stroke%3D%22%232B6696%22%20stroke-width%3D%2218%22%20d%3D%22M10%20150%20H48%20L62%2052%20L78%20205%20L92%20122%20L104%20156%20H186%20L150%20116%20C118%2084%20126%2026%20165%2024%20C186%2023%20197%2038%20200%2052%20C203%2038%20214%2023%20235%2024%20C274%2026%20282%2084%20250%20116%20L214%20156%20H296%20L312%20182%20L330%2050%20L346%20160%20L356%20150%20H390%22%2F%3E%3Cpath%20stroke%3D%22%23E3F2FB%22%20stroke-width%3D%226%22%20d%3D%22M10%20150%20H48%20L62%2052%20L78%20205%20L92%20122%20L104%20156%20H186%20L150%20116%20C118%2084%20126%2026%20165%2024%20C186%2023%20197%2038%20200%2052%20C203%2038%20214%2023%20235%2024%20C274%2026%20282%2084%20250%20116%20L214%20156%20H296%20L312%20182%20L330%2050%20L346%20160%20L356%20150%20H390%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -111,15 +122,19 @@ h3{font-family:var(--serif);font-weight:650;font-size:19px;margin:0 0 10px}
 .choice.limits input:checked + span{background:var(--limit-soft);border-color:var(--limit);color:var(--ink)}
 .choice.decline input:checked + span{background:var(--decline-soft);border-color:var(--decline);color:var(--ink)}
 .choice.untrained input:checked + span{background:var(--untrained-soft);border-color:var(--untrained);color:var(--ink)}
+.choice.patient input:checked + span{background:var(--sunk);border-color:var(--kelp);color:var(--ink)}
 .choice.na input:checked + span{background:var(--sunk);border-color:var(--muted)}
 .limits-field{margin-top:10px;display:none}
 .task[data-resp="limits"] .limits-field{display:block}
+.note-field{margin-top:10px;display:none}
+.task[data-resp="untrained"] .note-field{display:block}
 .add-row{display:flex;gap:10px;margin-top:16px}
 .add-row input{flex:1}
 
 button{font:inherit;font-size:16px;font-weight:700;border-radius:10px;padding:11px 18px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);min-height:46px}
 button.primary{background:var(--kelp);border-color:var(--kelp);color:var(--kelp-ink)}
 button:hover{filter:brightness(0.97)}
+a.button-link{display:inline-block;font-size:16px;font-weight:700;border-radius:10px;padding:11px 18px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;min-height:46px}
 button.quiet{background:transparent;border-color:transparent;color:var(--muted);text-decoration:underline;padding-left:0}
 
 .yn{display:flex;gap:8px;flex-wrap:wrap}
@@ -217,7 +232,7 @@ html{scroll-behavior:smooth}
 
   <section class="step" id="tasks">
     <div class="step-head"><span class="step-num">2</span><h2>Task by task</h2></div>
-    <p class="hint">Answer the tasks the care plan expects from you. Anything you leave unanswered will appear on your record as “Not selected, so not offered.” You can also mark a task “Doesn’t apply.”</p>
+    <p class="hint">Answer the tasks the care plan expects from you. Anything you leave unanswered will appear on your record as “Not selected, so not offered.” If the patient handles a task themselves, mark “Patient manages this” so it isn’t assigned to you. You can also mark a task “Doesn’t apply.”</p>
     <div class="card" id="task-list"></div>
     <div class="add-row">
       <input type="text" id="custom-task" placeholder="Add a task that isn’t listed" aria-label="Add a task that isn’t listed">
@@ -250,6 +265,7 @@ html{scroll-behavior:smooth}
           <label class="choice limits"><input type="radio" name="oncall" value="conditions"><span>With conditions</span></label>
         </div>
       </div>
+      <div><label class="f" for="respond">Limits on reaching me in an emergency <span class="f-note">(optional; not a promised response time)</span></label><input type="text" id="respond" placeholder="Two hours away; phone off at work; not overnight"></div>
       <div style="grid-column:1/-1"><label class="f" for="conditions">Conditions, limits, or support you need <span class="f-note">(no diagnosis required)</span></label><textarea id="conditions" placeholder="Need home health for wound care. Not available during work hours. Need respite one weekend a month."></textarea></div>
       <div style="grid-column:1/-1"><label class="f" for="context">Context for the care team <span class="f-note">(optional; this goes into the record, and some of it may be better said in the conversation instead)</span></label><textarea id="context" placeholder="How long you’ve been caregiving, who else has been asked to help, and anything the team should know when planning."></textarea></div>
     </div>
@@ -292,7 +308,7 @@ html{scroll-behavior:smooth}
 
   <footer>
     <p>This beta tool provides general information and is not legal or medical advice. The record it creates is a communication tool, not a legal document. Anything you share with a care team can become part of the medical record and may be reviewed later, including in legal proceedings. Describe your limits; you don’t need to share diagnoses. It doesn’t appoint a medical decision-maker, create employment, or waive any rights. Declining future tasks doesn’t erase care you’ve already provided.</p>
-    <p>A project of <a href="https://thecareimpulse.com">The Care Impulse</a>.</p>
+    <p>A project of <a href="https://thecareimpulse.com">The Care Impulse</a>. Related proposals: <a href="/care-act/">asking hospitals to record what caregivers agreed to</a> and <a href="/caregiver-credit/">strengthening the Social Security caregiver credit</a>.</p>
     <p>This form is shared under a <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 license</a>. Caregivers, hospitals, clinics, and families may use, share, and adapt it, including in clinical systems, with credit to Ginny Lee Sayre, <em>The Care Impulse</em>.</p>
   </footer>
 </div>
@@ -316,7 +332,12 @@ html{scroll-behavior:smooth}
     {group:"Availability", items:[
       ["backup","Emergency backup","Being the person to call if something fails"],
       ["overnight","Overnight supervision",""],
+      ["daytime","Daytime supervision","When the patient can’t safely be left alone"],
       ["contact","Being the listed contact","Receiving calls and relaying updates"]
+    ]},
+    {group:"Home and costs", items:[
+      ["housing","Housing the patient","Having the patient live in your home, short or long term"],
+      ["costs","Paying out of pocket","Supplies, equipment, medications, or paid help"]
     ]},
     {group:"During the hospital stay", settings:["hospital"], items:[
       ["bedside","Staying at the bedside","Overnights or long shifts during the stay"],
@@ -336,13 +357,14 @@ html{scroll-behavior:smooth}
       ["insurance","Insurance, pharmacy, and billing calls",""],
       ["portal","Patient portal and scheduling",""],
       ["family","Updating family",""],
+      ["interpreting","Interpreting","Translating between the patient and the care team"],
       ["agency","Coordinating with aides or care agencies","Schedules, instructions, problems, and filling gaps when they don’t show"],
     ]}
   ];
   const RESP = [
-    ["agree","Open to helping"],["limits","Open to helping, with limits"],["decline","Not taking this on"],["untrained","Not trained"],["na","Doesn’t apply"]
+    ["agree","Open to helping"],["limits","Open to helping, with limits"],["decline","Not taking this on"],["untrained","Not trained"],["patient","Patient manages this"],["na","Doesn’t apply"]
   ];
-  const LABEL = {agree:"Open to helping",limits:"Open to helping, with limits",decline:"Not taking this on",untrained:"Not trained",na:"Doesn’t apply"};
+  const LABEL = {agree:"Open to helping",limits:"Open to helping, with limits",decline:"Not taking this on",untrained:"Not trained",patient:"Patient manages this",na:"Doesn’t apply"};
   const KEY = "care-impulse-consent-record-v1";
 
   const $ = id => document.getElementById(id);
@@ -357,11 +379,11 @@ html{scroll-behavior:smooth}
   function plusDays(iso,n){ const d=new Date(iso+"T12:00:00"); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
   function fmt(iso){ if(!iso) return ""; const d=new Date(iso+"T12:00:00"); return d.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"}); }
 
-  const FIELDS = ["caregiver","relationship","patient","team","start","expires","perDay","perWeek","windows","notice","conditions","context","stopNotice","coordinator","backupPerson"];
-  if(!state.fields.start) state.fields.start = today();
+  const FIELDS = ["caregiver","relationship","patient","team","start","expires","perDay","perWeek","windows","notice","conditions","context","stopNotice","coordinator","backupPerson","respond"];
+  if(!state.fields.start || state.startAuto){ state.fields.start = today(); state.startAuto = true; }
   FIELDS.forEach(f => {
     const el = $(f); el.value = state.fields[f] || "";
-    el.addEventListener("input", () => { state.fields[f] = el.value; save(); refresh(); });
+    el.addEventListener("input", () => { state.fields[f] = el.value; if(f==="start") state.startAuto = false; save(); refresh(); });
   });
   ["overnight","oncall"].forEach(name => {
     document.querySelectorAll('input[name="'+name+'"]').forEach(r => {
@@ -401,6 +423,7 @@ html{scroll-behavior:smooth}
       '<div class="choices" role="radiogroup" aria-labelledby="'+nameId+'">' +
       RESP.map(([v,l]) => '<label class="choice '+v+'"><input type="radio" name="t-'+t.id+'" value="'+v+'"'+(cur.resp===v?' checked':'')+'><span>'+l+'</span></label>').join("") +
       '</div><div class="limits-field"><label class="f" for="lim-'+t.id+'">Your limits</label><input type="text" id="lim-'+t.id+'" placeholder="Only weekdays, only with training, only until March…" value="'+esc(cur.limits||"")+'"></div>' +
+      '<div class="note-field"><label class="f" for="note-'+t.id+'">What you haven’t been trained on <span class="f-note">(optional)</span></label><input type="text" id="note-'+t.id+'" placeholder="This pump model; injections; the new dressing…" value="'+esc(cur.note||"")+'"></div>' +
       (t.group==="Other tasks" ? '<button type="button" class="quiet" data-remove="'+t.id+'">Remove task</button>' : '');
     div.querySelectorAll('input[type=radio]').forEach(r => r.addEventListener("change", () => {
       state.tasks[t.id] = Object.assign({}, state.tasks[t.id], {resp:r.value});
@@ -408,6 +431,8 @@ html{scroll-behavior:smooth}
     }));
     const lim = div.querySelector("#lim-"+CSS.escape(t.id));
     lim.addEventListener("input", () => { state.tasks[t.id] = Object.assign({}, state.tasks[t.id], {limits:lim.value}); save(); refresh(); });
+    const note = div.querySelector("#note-"+CSS.escape(t.id));
+    note.addEventListener("input", () => { state.tasks[t.id] = Object.assign({}, state.tasks[t.id], {note:note.value}); save(); refresh(); });
     const rm = div.querySelector("[data-remove]");
     if(rm) rm.addEventListener("click", () => {
       state.custom = state.custom.filter(c => c.id !== t.id); delete state.tasks[t.id]; save(); renderTasks(); refresh();
@@ -443,7 +468,8 @@ html{scroll-behavior:smooth}
     if(!gaps.length){ host.innerHTML = '<p class="uncovered-empty">Nothing uncovered yet. Tasks you decline or haven’t been trained for will appear here.</p>'; return; }
     host.innerHTML = '<ul class="uncov">'+gaps.map(t => {
       const r = state.tasks[t.id].resp;
-      return '<li class="'+(r==="untrained"?"ut":"")+'"><span>'+esc(t.name)+'</span><span class="tag">'+(r==="untrained"?"Needs training or another provider":"Needs another plan")+'</span></li>';
+      const n = r==="untrained" ? (state.tasks[t.id].note||"").trim() : "";
+      return '<li class="'+(r==="untrained"?"ut":"")+'"><span>'+esc(t.name+(n?" ("+n+")":""))+'</span><span class="tag">'+(r==="untrained"?"Needs training or another provider":"Needs another plan")+'</span></li>';
     }).join("")+'</ul><p class="hint" style="margin:12px 0 0">“Family will manage” isn’t a plan unless a named person has agreed in writing.</p>';
   }
 
@@ -456,9 +482,11 @@ html{scroll-behavior:smooth}
     if(f.stopNotice) rows.push(["How I’ll communicate changes", f.stopNotice]);
     if(state.overnight) rows.push(["Overnight care", {yes:"Yes",no:"No",conditions:"With conditions"}[state.overnight]]);
     if(state.oncall) rows.push(["Can be contacted in emergencies", {yes:"Yes",no:"No",conditions:"With conditions"}[state.oncall]]);
+    if(f.respond) rows.push(["Limits on emergency contact", f.respond]);
     return rows;
   }
 
+  function withNote(arr){ return arr.map(t => { const n = ((state.tasks[t.id]||{}).note||"").trim(); return Object.assign({}, t, {name: t.name + (n ? " ("+n+")" : "")}); }); }
   function notAgreed(){ return allTasks().filter(t => { const r = state.tasks[t.id]; return !r || !r.resp || r.resp === "na"; }); }
   function byResp(v){ return allTasks().filter(t => state.tasks[t.id] && state.tasks[t.id].resp === v); }
   function notSelected(){ return allTasks().filter(t => !state.tasks[t.id] || !state.tasks[t.id].resp); }
@@ -494,7 +522,11 @@ html{scroll-behavior:smooth}
     "This record does not create a general or permanent duty to provide care. Silence or past help is not agreement.",
     "Tasks I declined or have not been trained for remain uncovered and need another agreed plan.",
     "Being trained or shown how to do a task is not agreement to do it.",
+    "“Can be contacted in emergencies” does not place me on standby or guarantee my availability or any response time.",
+    "Being listed as the emergency contact, health care agent, or the person who receives updates is not agreement to provide care.",
+    "Tasks marked “Patient manages this” are, to my knowledge, managed by the patient independently. They should not be reassigned without review.",
     "Any task the care plan expects that is not listed here is not offered and still needs a plan.",
+    "This record should be reviewed if the medication, equipment, care setting, or the patient’s condition changes, and not only when it expires.",
     "The patient’s discharge or care should not depend on my signing this.",
     "I may change or withdraw this record at any time, and declining future tasks does not erase care I have already provided."
   ];
@@ -521,8 +553,9 @@ html{scroll-behavior:smooth}
     $("record").innerHTML =
       '<h4>Caregiver Scope and Consent Record</h4>' +
       '<div class="meta">'+esc(f.caregiver||"Caregiver")+(f.relationship?" ("+esc(f.relationship.toLowerCase())+")":"")+(f.patient?", for "+esc(f.patient):"")+'<br>Valid '+esc(fmt(f.start||today()))+' through '+esc(fmt(expiry()))+'</div>' +
+      secList("Care the patient currently manages independently", byResp("patient"), "To my knowledge. Please confirm with the patient, and do not reassign without review.") +
       secList("What I am not taking on", byResp("decline"), "Another plan is needed.") +
-      secList("What I have not been trained for", byResp("untrained"), "Training is not agreement. Another plan or provider is needed.") +
+      secList("What I have not been trained for", withNote(byResp("untrained")), "Training is not agreement. Another plan or provider is needed.") +
       '<div class="sec">What I’m open to helping with</div>' +
       (agreedL.length ? '<table><thead><tr><th>Task</th><th>Response</th><th>Limits</th></tr></thead><tbody>' +
         agreedL.map(t => { const r = state.tasks[t.id]; return '<tr><td>'+esc(t.name)+'</td><td><span class="badge b-'+r.resp+'">'+LABEL[r.resp]+'</span></td><td>'+esc(r.resp==="limits"?(r.limits||"Limits not stated"):"")+'</td></tr>'; }).join("") +
@@ -543,10 +576,11 @@ html{scroll-behavior:smooth}
     lines.push((f.caregiver||"Caregiver")+(f.relationship?" ("+f.relationship.toLowerCase()+")":"")+(f.patient?", for "+f.patient:""));
     lines.push("Valid "+fmt(f.start||today())+" through "+fmt(expiry()));
     lines.push("");
-    const groups = {agree:[],limits:[],decline:[],untrained:[]};
-    list.forEach(t => groups[state.tasks[t.id].resp].push(t));
+    const groups = {agree:[],limits:[],decline:[],untrained:[],patient:[]};
+    list.forEach(t => { const g = groups[state.tasks[t.id].resp]; if(g) g.push(t); });
+    if(groups.patient.length){ lines.push("Care the patient currently manages independently (please confirm with the patient; do not reassign without review):"); groups.patient.forEach(t => lines.push("  - "+t.name)); lines.push(""); }
     if(groups.decline.length){ lines.push("I am not taking on (another plan is needed):"); groups.decline.forEach(t => lines.push("  - "+t.name)); lines.push(""); }
-    if(groups.untrained.length){ lines.push("I have not been trained for (training or another provider is needed):"); groups.untrained.forEach(t => lines.push("  - "+t.name)); lines.push(""); }
+    if(groups.untrained.length){ lines.push("I have not been trained for (training or another provider is needed):"); withNote(groups.untrained).forEach(t => lines.push("  - "+t.name)); lines.push(""); }
     if(groups.agree.length){ lines.push("I’m open to helping with:"); groups.agree.forEach(t => lines.push("  - "+t.name)); lines.push(""); }
     if(groups.limits.length){ lines.push("I’m open to helping, with these limits:"); groups.limits.forEach(t => lines.push("  - "+t.name+(state.tasks[t.id].limits?" ("+state.tasks[t.id].limits+")":" (limits not stated)"))); lines.push(""); }
     lines.push("Coordination and backup still to be confirmed:"); lines.push("  - Coordinating care: "+(f.coordinator||"to be named")); lines.push("  - Backup when I’m unavailable: "+(f.backupPerson||"to be named")); lines.push("  - Covering tasks I’m not taking on or not trained for: to be named"); lines.push("  - Reviewing this plan before it expires: to be named"); lines.push("");
@@ -595,9 +629,9 @@ html{scroll-behavior:smooth}
     return '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Caregiver Scope and Consent Record (blank)</title><style>body{font-family:Georgia,serif;max-width:760px;margin:30px auto;padding:0 20px;color:#111;line-height:1.5;font-size:14px}h1{font-size:22px;margin:0 0 4px}h2{font-size:16px;margin:20px 0 6px}table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid #bbb;padding:5px 4px;font-size:13px;text-align:left;vertical-align:top}th{font-size:11px}td.c{text-align:center;width:52px}p{margin:6px 0}.keep{break-inside:avoid;page-break-inside:avoid}.sig{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:34px}.sig div{border-top:1px solid #111;padding-top:6px;font-size:12px}.small{font-size:12px;color:#444}@page{margin:0.5in}@media print{body{margin:0 auto}}</style></head><body>' +
       '<h1>Caregiver Scope and Consent Record</h1><p class="small">From The Care Impulse by Ginny Lee Sayre. A communication tool, not a legal document, and not legal or medical advice. Shared under CC BY 4.0: free to use and adapt with credit to Ginny Lee Sayre, The Care Impulse (thecareimpulse.com/consent).</p>' +
       '<h2>You and this record</h2><p>Caregiver name '+line("40%")+' Relationship '+line("25%")+'</p><p>Patient name '+line("40%")+' Care setting: '+box+' Hospital '+box+' Clinic '+box+' Family</p><p>Starts '+line("25%")+' Expires '+line("25%")+' <span class="small">(if blank, 90 days)</span></p>' +
-      '<h2>Task by task</h2><table><thead><tr><th>Task</th><th>Open to helping</th><th>With limits</th><th>Not taking on</th><th>Not trained</th><th>Doesn’t apply</th><th>Limits</th></tr></thead><tbody>' +
-      rows.map(r => '<tr><td>'+esc(r)+'</td><td class="c">'+box+'</td><td class="c">'+box+'</td><td class="c">'+box+'</td><td class="c">'+box+'</td><td class="c">'+box+'</td><td style="width:22%"></td></tr>').join("") + '</tbody></table>' +
-      '<div class="keep"><h2>Time and availability</h2><p>Maximum hours available per day '+line("12%")+' Maximum per week '+line("12%")+' Notice needed '+line("18%")+'</p><p>Days and times available '+line("60%")+'</p><p>Overnight care: '+box+' Yes '+box+' No '+box+' With conditions &nbsp;&nbsp; Can be contacted in emergencies: '+box+' Yes '+box+' No '+box+' With conditions</p><p>Conditions, limits, or support needed (no diagnosis required)</p><p>'+line("100%")+'</p><p>'+line("100%")+'</p></div>' +
+      '<h2>Task by task</h2><table><thead><tr><th>Task</th><th>Open to helping</th><th>With limits</th><th>Not taking on</th><th>Not trained</th><th>Patient manages this</th><th>Doesn’t apply</th><th>Limits or notes</th></tr></thead><tbody>' +
+      rows.map(r => '<tr><td>'+esc(r)+'</td><td class="c">'+box+'</td><td class="c">'+box+'</td><td class="c">'+box+'</td><td class="c">'+box+'</td><td class="c">'+box+'</td><td class="c">'+box+'</td><td style="width:20%"></td></tr>').join("") + '</tbody></table>' +
+      '<div class="keep"><h2>Time and availability</h2><p>Maximum hours available per day '+line("12%")+' Maximum per week '+line("12%")+' Notice needed '+line("18%")+'</p><p>Days and times available '+line("60%")+'</p><p>Overnight care: '+box+' Yes '+box+' No '+box+' With conditions &nbsp;&nbsp; Can be contacted in emergencies: '+box+' Yes '+box+' No '+box+' With conditions</p><p>Limits on reaching me in an emergency (not a promised response time) '+line("35%")+'</p><p>Conditions, limits, or support needed (no diagnosis required)</p><p>'+line("100%")+'</p><p>'+line("100%")+'</p></div>' +
       '<div class="keep"><h2>Uncovered care</h2><p class="small">Tasks declined, not trained for, or not listed, and who will cover them.</p><p>'+line("100%")+'</p><p>'+line("100%")+'</p><p>'+line("100%")+'</p></div>' +
       '<div class="keep"><h2>Statement</h2>'+STATEMENT.map(s => '<p>'+esc(s)+'</p>').join("")+'<p class="small">Anything shared with a care team can become part of the medical record and may be reviewed later, including in legal proceedings. If setting limits could put your housing, finances, or safety at risk, think carefully about timing and who sees this record.</p>' +
       '<div class="sig"><div>Caregiver acknowledgment of current scope and limits, not contractual acceptance of responsibility (signature and date)</div><div>Received or acknowledged by (optional: name and date)</div></div></div></body></html>';
@@ -645,7 +679,7 @@ html{scroll-behavior:smooth}
   $("reset").addEventListener("click", () => {
     if(!confirm("Clear everything on this device and start over?")) return;
     try{ localStorage.removeItem(KEY); }catch(e){}
-    state = {fields:{start:today()}, tasks:{}, custom:[], overnight:"", oncall:"", setting:"hospital"};
+    state = {fields:{start:today()}, tasks:{}, custom:[], overnight:"", oncall:"", setting:"hospital", startAuto:true};
     FIELDS.forEach(f => $(f).value = state.fields[f] || "");
     document.querySelectorAll('input[name="overnight"],input[name="oncall"]').forEach(r => r.checked=false);
     syncSetting(); renderTasks(); refresh(); status("Cleared.");
