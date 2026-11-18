@@ -1,0 +1,544 @@
+<!doctype html>
+<!--
+  CAREGIVER SECURITY CHECK: DESIGN NOTES (private prototype)
+  Read with: caregiver-security-check-review.pdf (Muse review, v1.0)
+
+  Purpose (Phase 0): a private self-reflection aid. Not a screening instrument.
+  No score, no risk level, no cutoff. Never a diagnosis or a finding that anyone is abusive.
+
+  Timeframes, chosen deliberately:
+  - Section 5, Saying no: "the last few times." Limits are set episodically, so recall
+    is anchored to recent instances rather than a calendar window.
+  - Section 6, Between you: past three months. Long enough to show a pattern rather than
+    a single incident; matches common practice in relationship-pattern screening.
+  - Section 7, How you are doing: past month. Matches standard recall windows for
+    distress and symptom questions, which shift faster than relationship patterns.
+  - Section 3, How you got here: no window. These questions are about history.
+
+  Scope:
+  - Financial exploitation: one direct item in Section 6 (p_money). Money is also mapped
+    as power in Section 4.
+  - Sexual violence: out of scope, by decision. Asking well requires trauma-informed referral
+    pathways a reflection aid can't promise. Stated in "Before you start," with a referral line.
+
+  Readback rule: repeat what was reported, say what was skipped, state principles.
+  Don't explain why something happened in the caregiver's household.
+
+  Privacy: no storage, no external requests (verify in the network panel every release),
+  neutral tab title, Quick exit, mandated-reporter notice before any section.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Care notes</title>
+<style>
+:root{
+  --bg:#FAF8F6; --surface:#FFFFFF; --sunk:#F2EEE9; --ink:#222222; --muted:#5C5752; --line:#E3DDD6;
+  --kelp:#2B6696; --kelp-ink:#FFFFFF; --kelp-soft:#DDEBF6; --link:#9E561A;
+  --limit:#8A5F0C; --limit-soft:#F6E9C8;
+  --decline:#7A3355; --decline-soft:#F2DCE6;
+  --focus:#1D5FBF;
+  --serif:Georgia, "Times New Roman", serif;
+  --sans:system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#16181B; --surface:#1E2125; --sunk:#262A2F; --ink:#ECE8E2; --muted:#ABA49C; --line:#363B41;
+    --kelp:#8CC3EA; --kelp-ink:#16181B; --kelp-soft:#22384A; --link:#E3A86E;
+    --limit:#E8C46E; --limit-soft:#3A3120;
+    --decline:#E7A1C2; --decline-soft:#3D2331;
+    --focus:#8DB6FF;
+    color-scheme: dark;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:70px;scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.55;-webkit-text-size-adjust:100%;padding-bottom:env(safe-area-inset-bottom,0px)}
+a{color:var(--link);text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px 64px}
+
+.proto{background:var(--decline-soft);color:var(--ink);font-size:14px;text-align:center;padding:8px 92px 8px 14px}
+#exit{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);right:10px;z-index:20;font:inherit;font-size:14px;font-weight:700;border-radius:999px;padding:8px 14px;border:1px solid var(--decline);background:var(--decline);color:#fff;cursor:pointer;min-height:38px}
+
+header.top{padding:30px 0 10px;text-align:center}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,6vw,40px);line-height:1.12;margin:0 0 12px}
+.lede{font-size:19px;color:var(--muted);max-width:56ch;margin:0 auto}
+.principle{margin:22px auto 0;max-width:34ch;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.45}
+
+nav.steps{position:sticky;top:0;z-index:9;background:var(--surface);border-bottom:1px solid var(--line)}
+nav.steps ol{list-style:none;margin:0 auto;padding:10px 120px 10px 20px;max-width:760px;display:flex;gap:6px;overflow-x:auto}
+nav.steps a{display:block;white-space:nowrap;text-decoration:none;color:var(--muted);font-size:15px;padding:6px 12px;border-radius:999px}
+nav.steps a:hover{color:var(--ink);background:var(--sunk)}
+
+section.step{margin-top:40px}
+.step-head{display:flex;gap:14px;align-items:baseline;margin-bottom:6px}
+.step-num{font-family:var(--serif);font-size:15px;color:var(--kelp);font-weight:700;min-width:1.4em}
+h2{font-family:var(--serif);font-weight:650;font-size:25px;margin:0;line-height:1.2}
+h3{font-family:var(--serif);font-weight:650;font-size:19px;margin:0 0 8px}
+.hint{color:var(--muted);margin:4px 0 16px;max-width:62ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:6px 20px}
+.q{border-top:1px solid var(--line);padding:16px 0}
+.q:first-child{border-top:0}
+.q[hidden]{display:none}
+.q-label{font-weight:700;display:block}
+.q-help{color:var(--muted);font-size:15px;margin-top:2px}
+.choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.choice{position:relative}
+.choice input{position:absolute;opacity:0;width:1px;height:1px}
+.choice span{display:inline-block;padding:8px 14px;border-radius:999px;border:1px solid var(--line);font-size:15px;cursor:pointer;background:var(--bg);user-select:none}
+.choice input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
+.choice input:checked + span{font-weight:700;background:var(--kelp-soft);border-color:var(--kelp)}
+input[type=number],input[type=text],textarea{width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:46px;margin-top:8px}
+input[type=number]{max-width:160px}
+textarea{min-height:84px;resize:vertical}
+
+.notice{background:var(--limit-soft);border-radius:10px;padding:12px 16px;margin:0 0 14px;font-size:16px}
+.notice strong{display:block;margin-bottom:2px}
+.safety{background:var(--decline-soft);border-radius:10px;padding:12px 16px;margin-top:12px;font-size:16px}
+.safety[hidden]{display:none}
+.safety a{font-weight:700}
+
+.readback{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:28px 26px;box-shadow:0 1px 0 var(--line),0 12px 28px -18px rgba(0,0,0,.35)}
+.readback h4{font-family:var(--serif);font-weight:650;font-size:23px;margin:0 0 4px}
+.readback .meta{color:var(--muted);font-size:15px;margin-bottom:14px}
+.readback .sec{font-family:var(--serif);font-weight:650;font-size:18px;margin:20px 0 6px}
+.readback p{margin:0 0 10px}
+.readback ul{margin:0 0 10px;padding-left:22px}
+.readback li{margin-bottom:4px}
+.readback .quote{font-family:var(--serif);font-style:italic;border-left:3px solid var(--kelp);padding-left:12px}
+.readback .aside{color:var(--muted);font-size:15px}
+.empty{color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+button{font:inherit;font-size:16px;font-weight:700;border-radius:10px;padding:11px 18px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);min-height:46px}
+button.primary{background:var(--kelp);border-color:var(--kelp);color:var(--kelp-ink)}
+button.quiet{background:transparent;border-color:transparent;color:var(--muted);text-decoration:underline;padding-left:0}
+.omit{background:var(--limit-soft);border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:16px}
+.omit .aside{display:block;color:var(--muted);font-size:14px;margin-top:6px}
+.chk{display:flex;gap:8px;align-items:center;margin-top:8px}
+.chk input{width:20px;height:20px}
+.status{margin-top:10px;min-height:1.4em;color:var(--muted)}
+footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid var(--line);padding-top:18px}
+
+@media print{
+  body{background:#fff;color:#000}
+  .noprint,.proto,#exit,nav.steps,header.top,section.step:not(#readback-step),#readback-step .hint,#readback-step .actions,#readback-step .status,#readback-step .step-head,footer{display:none !important}
+  .readback{border:0;box-shadow:none;padding:0}
+  section.step{margin:0}
+}
+</style>
+</head>
+<body>
+
+<div class="proto">Private prototype. Not validated, not for distribution.</div>
+<button id="exit" type="button" title="Clears everything and leaves this page">Quick exit</button>
+
+<nav class="steps" aria-label="Sections">
+  <ol>
+    <li><a href="#start">1 Before you start</a></li>
+    <li><a href="#situation">2 Situation</a></li>
+    <li><a href="#history">3 How you got here</a></li>
+    <li><a href="#power">4 Who holds what</a></li>
+    <li><a href="#no">5 Saying no</a></li>
+    <li><a href="#between">6 Between you</a></li>
+    <li><a href="#you">7 How you are</a></li>
+    <li><a href="#stop">8 If you stopped</a></li>
+    <li><a href="#readback-step">9 Read it back</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Caregiver Security Check</h1>
+    <p class="lede">The Consent Record asks what you agreed to. This asks whether you can hold those limits safely, and what caregiving is costing you.</p>
+    <p class="principle">A caregiver’s right to refuse means little if using it puts them at risk.</p>
+  </header>
+
+  <section class="step" id="start">
+    <div class="step-head"><span class="step-num">1</span><h2>Before you start</h2></div>
+    <div class="card" style="padding:16px 20px">
+      <p style="margin:0 0 10px"><strong>This is yours.</strong> It isn’t signed by the person you care for, and it isn’t sent anywhere. You decide if anyone else sees it.</p>
+      <p style="margin:0 0 10px"><strong>Nothing is saved.</strong> If you close or refresh this page, your answers are gone. That’s on purpose. In a shared household, saved answers can be found. To keep a copy, print it or save it as a PDF at the end, and store it somewhere only you can open.</p>
+      <p style="margin:0 0 10px"><strong>Quick exit</strong>, at the top of the screen, clears everything and opens a weather page. It can’t erase your browser history or anything you’ve already printed or saved. If someone else uses this device, open this page in a private or incognito window.</p>
+      <p style="margin:0 0 10px"><strong>Before you share anything you write here:</strong> counselors, social workers, and clinicians are often mandated reporters. Some answers could require them to make a report. Ask what they’d have to report before you show them. More on this in section 6.</p>
+      <p style="margin:0 0 10px"><strong>What this doesn’t ask about:</strong> sexual violence. If that’s part of what’s happening, the National Sexual Assault Hotline is confidential and open 24/7: <a href="tel:18006564673">1-800-656-4673</a>.</p>
+      <p style="margin:0">This isn’t a diagnosis, and it doesn’t label anyone as abusive. It puts what you live with into words, so you can take it to someone who can help, like a caregiver support center, a counselor, or a social worker you trust.</p>
+    </div>
+  </section>
+
+  <div id="questions"></div>
+
+  <section class="step" id="readback-step">
+    <div class="step-head"><span class="step-num">9</span><h2>Read it back</h2></div>
+    <p class="hint">This is what you reported, in plain language. Read it slowly. Many caregivers have never seen the whole picture in one place.</p>
+    <div class="omit noprint"><strong>Making a copy to share?</strong> You can leave these out of the printed or copied version:<br><label class="chk"><input type="checkbox" id="omit_temper"> My answer about temper</label><label class="chk"><input type="checkbox" id="omit_self"> My answer about self-harm</label><label class="chk" id="flag_wrap" hidden><input type="checkbox" id="flag_omit" checked> Note on the copy that some answers were left out</label><span class="aside">Before you share, ask the person what they’d be required to report.</span></div>
+    <div class="readback" id="readback"></div>
+    <div class="actions">
+      <button type="button" class="primary" id="print">Print or save as PDF</button>
+      <button type="button" id="copy">Copy as text</button>
+      <button type="button" class="quiet" id="clear">Clear everything</button>
+    </div>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+  </section>
+
+  <footer>
+    <p><strong>Working title, private prototype.</strong> This hasn’t been validated as a screening instrument. Some questions are adapted from domestic-violence screening (the HITS screener) and from research on coercive control. Others come from caregiving experience. By design, it doesn’t ask about sexual violence; that needs referral pathways a reflection tool can’t promise. Before any real use, it needs review by clinicians, caregiver-support professionals, and a lawyer, and a check against existing validated tools.</p>
+    <p>Companion to the <em>Caregiver Scope and Consent Record</em>, from <em>The Care Impulse</em> by Ginny Lee Sayre.</p>
+    <p>Phone numbers listed are national lines as of this draft. Confirm them before relying on them.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const FREQ = [["0","Never"],["1","Rarely"],["2","Sometimes"],["3","Often"],["4","Almost always"]];
+  const FREQ_WORD = ["never","rarely","sometimes","often","almost always"];
+  const AXIS = [["me","Me"],["them","Them"],["shared","Shared"],["other","Someone else"],["na","Doesn’t apply"]];
+
+  const SECTIONS = [
+    {id:"situation", num:2, title:"Your situation", hint:"The basics, plus the time it takes. Count everything: hands-on care, appointments, calls, portal messages, paperwork, and research.", qs:[
+      {id:"rel", type:"single", label:"Who do you care for?", opts:[["parent","A parent"],["partner","A spouse or partner"],["child","An adult child"],["sibling","A sibling"],["relative","Another relative"],["friend","A friend or someone else"]]},
+      {id:"live", type:"single", label:"Do you live with them?", opts:[["yes","Yes"],["part","Part of the time"],["no","No"]]},
+      {id:"years", type:"number", label:"About how many years have you been caregiving for them?", min:0, max:80},
+      {id:"cog", type:"single", label:"How would you describe their thinking and memory right now?", help:"This matters because most tools assume difficult behavior comes from cognitive illness. Sometimes it does. Sometimes it doesn’t.", opts:[["intact","Clear, intact"],["some","Some changes"],["dx","Diagnosed dementia or cognitive impairment"],["unsure","Not sure"]]},
+      {id:"paid", type:"single", label:"Are you paid for any of this care?", opts:[["ihss","Yes, through a state or county program (like IHSS in California)"],["program","Yes, another program"],["family","Yes, privately by family"],["no","No"]]},
+      {id:"hours", type:"number", label:"In a typical week, about how many hours go to their care?", help:"A rough guess is fine. If you’re on call around the clock, count what you actually spend, not the whole 168.", min:0, max:168},
+      {id:"paidh", type:"number", label:"How many of those hours are paid?", min:0, max:168, when:s => s.paid && s.paid!=="no"},
+      {id:"nights", type:"number", label:"How many nights a week are you on call or woken up?", min:0, max:7},
+      {id:"dayoff", type:"single", label:"When did you last have a full day completely off?", opts:[["week","This week"],["month","This month"],["6mo","In the last 6 months"],["year","In the last year"],["never","Longer, or I can’t remember"]]},
+      {id:"ownhealth", type:"single", label:"Have you put off your own medical care because of caregiving?", opts:[["no","No"],["some","Sometimes"],["often","Yes, often"]]},
+      {id:"rate", type:"number", label:"Optional: what does paid home care cost per hour where you live? ($)", help:"Leave blank to see hours only.", min:0, max:500}
+    ]},
+    {id:"history", num:3, title:"How you got here", hint:"Most caregiving isn’t chosen all at once. It builds up. These questions are about the system around you, not only the person you care for.", qs:[
+      {id:"expected", type:"single", label:"When this started, how long did you expect it to last?", opts:[["weeks","A few weeks"],["months","A few months"],["year","A year or two"],["longterm","Long-term, and I knew it"],["noidea","I didn’t think about it. It just started"]]},
+      {id:"capture", type:"single", label:"Has care been assigned to you because you were the one who could do it, without anyone asking whether you agreed?", opts:[["no","No"],["once","Once or twice"],["many","Many times"]]},
+      {id:"discharge", type:"single", label:"Has a hospital discharge depended on you being trained to do a care task?", opts:[["no","No"],["once","Once"],["more","More than once"]]},
+      {id:"chart", type:"single", label:"Has a care plan or medical record named you as responsible for something you never agreed to?", opts:[["no","No"],["yes","Yes"],["notsure","Not sure. I haven’t seen it"]]},
+      {id:"escalate", type:"single", label:"Do you stay partly because, after everything you’ve already given, stopping now would feel wrong?", opts:[["no","No"],["some","Sometimes"],["yes","Yes"]]}
+    ]},
+    {id:"power", num:4, title:"Who holds what", hint:"Households split power along different lines, and most tools only ask about one. There’s no right answer. Who holds each of these today?", qs:[
+      {id:"need", type:"single", label:"Daily care: who depends on the other to get through the day?", opts:[["they","They depend on me"],["i","I depend on them"],["each","We depend on each other"],["neither","Neither"]]},
+      {id:"ax_home", type:"axis", label:"Ownership: whose name is on the home?"},
+      {id:"ax_money", type:"axis", label:"Money: whose income or savings pays for the household?"},
+      {id:"ax_access", type:"axis", label:"Access: who can spend household money without asking?"},
+      {id:"ax_visible", type:"axis", label:"Visibility: who can see what the other spends?"},
+      {id:"ax_legal", type:"axis", label:"Legal: who holds power of attorney or makes legal decisions?"},
+      {id:"ax_info", type:"axis", label:"Information: who knows the medications, doctors, and history?"},
+      {id:"ax_cred", type:"axis", label:"Credibility: when you two disagree, whose account do doctors, social workers, or family tend to believe?"},
+      {id:"belong", type:"single", label:"Would your place in the family change if you stopped caregiving?", opts:[["no","No"],["some","Probably somewhat"],["yes","Yes, a lot"],["unsure","Not sure"]]},
+      {id:"exit", type:"single", label:"If you stopped caregiving tomorrow, could you cover a month of housing on your own?", opts:[["yes","Yes"],["unsure","Not sure"],["no","No"]]}
+    ]},
+    {id:"no", num:5, title:"Saying no", hint:"A limit you can’t enforce isn’t really a limit. Think about the last few times you said no, set a limit, or asked for something for yourself.", qs:[
+      {id:"after", type:"multi", label:"What usually happens after you say no or set a limit?", help:"Choose all that apply.", opts:[["accepted","It’s accepted"],["discuss","We talk it through"],["guilt","Guilt or crying"],["anger","Anger or yelling"],["silence","Silent treatment or withdrawal"],["threat","Threats about housing, money, inheritance, or telling others"],["health","Their health is described as getting worse because of me"],["override","Someone else is called in to override me"],["dontask","I don’t say no anymore, or I never could"]]},
+      {id:"safe_no", type:"single", label:"How safe does it feel to say no?", opts:[["safe","Safe"],["mostly","Mostly safe"],["uneasy","Uneasy"],["unsafe","Not safe"]]},
+      {id:"stopped", type:"single", label:"Have you stopped asking for things for yourself because of how it goes?", opts:[["no","No"],["some","Some things"],["yes","Yes"]]},
+      {id:"avoidlearn", type:"single", label:"Have you ever deliberately avoided learning a task so you wouldn’t become the only plan?", opts:[["no","No"],["thought","I’ve thought about it"],["yes","Yes"]]}
+    ]},
+    {id:"between", num:6, title:"How it goes between you", notice:true, hint:"In the past three months, how often has the person you care for done each of these? Patterns over time matter more than any single moment.", qs:[
+      {id:"p_insult", type:"freq", label:"Insulted, belittled, or criticized you in ways that felt meant to hurt"},
+      {id:"p_guilt", type:"freq", label:"Used guilt to change a decision you’d made about your time, plans, or leaving"},
+      {id:"p_demand", type:"freq", label:"Used their medical needs to demand more of your time than the care actually requires"},
+      {id:"p_threat", type:"freq", label:"Threatened consequences if you didn’t comply, such as cutting you off, ending your housing, withdrawing support, or telling others"},
+      {id:"p_refuse", type:"freq", label:"Refused other help, like aides, family, or services, or avoided doing things they can do, so the work stays with you"},
+      {id:"p_monitor", type:"freq", label:"Questioned or monitored your time, spending, or who you talk to"},
+      {id:"p_story", type:"freq", label:"Gave others a version of events that undermined you, or overstated what you’d agreed to"},
+      {id:"p_isolate", type:"freq", label:"Made it harder to see friends, work, or have a life outside caregiving"},
+      {id:"p_money", type:"freq", label:"Taken or used your money without your agreement, or pressured you to spend your own money on their needs"},
+      {id:"p_employer", type:"freq", label:"If they’re officially your employer in that program, used that role as leverage, such as not signing timesheets, threatening to fire you, or expecting unpaid hours", when:s => s.paid==="ihss"},
+      {id:"p_physical", type:"freq", label:"Physically hurt you, or threatened to", safety:"unsafe"},
+      {id:"driver", type:"multi", label:"When these things happen, what do you think is driving it?", help:"You don’t have to choose one. Pick as many as fit.", opts:[["symptoms","Illness: pain, breathlessness, exhaustion"],["meds","Medication or cognitive changes"],["fear","Fear"],["before","Patterns that were there before the illness"],["mix","Usually a mix"],["unsure","Not sure"]]},
+      {id:"prof", type:"single", label:"If you’ve raised any of this with a professional, what happened?", opts:[["never","I haven’t raised it"],["serious","It was taken seriously"],["normal","It was called normal caregiver stress"],["back","It was turned back on me"],["worse","It made things worse"]]}
+    ]},
+    {id:"you", num:7, title:"How you’re doing", hint:"In the past month, how often have you…", qs:[
+      {id:"s_trapped", type:"freq", label:"Felt trapped, with no realistic way to step back"},
+      {id:"s_body", type:"freq", label:"Felt your body stay braced: jumping at alarms or sounds, unable to sleep even when you could"},
+      {id:"s_alone", type:"freq", label:"Felt that no one understands what this takes"},
+      {id:"s_reflex", type:"freq", label:"Settled their emotional state before noticing your own"},
+      {id:"s_unsafe", type:"freq", label:"Felt unsafe at home", safety:"unsafe"},
+      {id:"s_temper", type:"freq", label:"Worried you might lose control of your temper", help:"Many caregivers feel this, and saying it early is how support arrives before anything happens. Answering here is private. But if you share your readback, this answer can be misread by someone with power over you, like a clinician, IHSS, or family. You can leave it out of the copy you print or share."},
+      {id:"s_self", type:"freq", label:"Had thoughts that you’d be better off not here, or of hurting yourself", safety:"self"}
+    ]},
+    {id:"stop", num:8, title:"If you stopped", hint:"This is what keeps most caregivers in place: not the work itself, but the absence of anyone to hand it to.", qs:[
+      {id:"backup", type:"single", label:"If you couldn’t continue tomorrow, would someone take over?", opts:[["named","Yes, a specific person who has agreed"],["maybe","Maybe, but it’s unclear"],["noone","No one"]]},
+      {id:"respite", type:"single", label:"Has anyone ever offered or arranged a break for you?", opts:[["regular","Yes, regularly"],["once","Once or twice"],["never","Never"]]},
+      {id:"praise", type:"single", label:"Do people praise what you do without offering help?", opts:[["no","No"],["some","Sometimes"],["often","Often"]]},
+      {id:"plan_call", type:"text", label:"Someone you could call if things got bad", help:"A first name is enough. Optional."},
+      {id:"plan_stay", type:"text", label:"Somewhere you could stay for a night if you needed to", help:"Optional."},
+      {id:"plan_cover", type:"text", label:"Who or what could cover their care for 48 hours", help:"A person, an agency, respite, or “I don’t know.” Optional."},
+      {id:"need_text", type:"textarea", label:"What would need to exist for you to step back, even a little?", help:"In your own words. This goes at the top of your readback."}
+    ]}
+  ];
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  let S = {};
+
+  const SAFETY = {
+    self:'<strong>If you’re having thoughts like this, you don’t have to wait.</strong> Call or text <a href="tel:988">988</a>, the Suicide &amp; Crisis Lifeline, any time. It’s for caregivers at the end of their rope, too, not only for emergencies.',
+    unsafe:'<strong>If you’re in danger right now, call 911.</strong> For confidential support and safety planning, the National Domestic Violence Hotline is <a href="tel:18007997233">1-800-799-7233</a>. It covers family members, not only partners.'
+  };
+
+  function choiceHTML(q, type, opts){
+    const input = type==="multi" ? "checkbox" : "radio";
+    return '<div class="choices" role="'+(input==="radio"?"radiogroup":"group")+'" aria-labelledby="l-'+q.id+'">'+
+      opts.map(([v,l]) => '<label class="choice"><input type="'+input+'" name="'+q.id+'" value="'+v+'"><span>'+esc(l)+'</span></label>').join("")+'</div>';
+  }
+
+  function render(){
+    const host = $("questions");
+    host.innerHTML = SECTIONS.map(sec =>
+      '<section class="step" id="'+sec.id+'"><div class="step-head"><span class="step-num">'+sec.num+'</span><h2>'+esc(sec.title)+'</h2></div>'+
+      (sec.notice ? '<div class="notice"><strong>Before this section</strong>Counselors, social workers, and clinicians are often <em>mandated reporters</em>. If you later share these answers, they may be legally required to report some things, usually concerns that someone, including the person you care for, is at risk of harm. Before you share, ask them what they’d have to report. That’s a normal question, and a good professional will answer it.</div>' : '')+
+      '<p class="hint">'+esc(sec.hint)+'</p><div class="card">'+
+      sec.qs.map(q => {
+        let body = "";
+        if(q.type==="single") body = choiceHTML(q,"single",q.opts);
+        else if(q.type==="multi") body = choiceHTML(q,"multi",q.opts);
+        else if(q.type==="freq") body = choiceHTML(q,"single",FREQ);
+        else if(q.type==="axis") body = choiceHTML(q,"single",AXIS);
+        else if(q.type==="number") body = '<input type="number" id="i-'+q.id+'" name="'+q.id+'" inputmode="decimal" min="'+q.min+'" max="'+q.max+'" aria-labelledby="l-'+q.id+'">';
+        else if(q.type==="text") body = '<input type="text" id="i-'+q.id+'" name="'+q.id+'" aria-labelledby="l-'+q.id+'" autocomplete="off">';
+        else if(q.type==="textarea") body = '<textarea id="i-'+q.id+'" name="'+q.id+'" aria-labelledby="l-'+q.id+'"></textarea>';
+        return '<div class="q" data-q="'+q.id+'"><span class="q-label" id="l-'+q.id+'">'+esc(q.label)+'</span>'+
+          (q.help ? '<div class="q-help">'+esc(q.help)+'</div>' : '')+body+
+          (q.safety ? '<div class="safety" id="safe-'+q.id+'" hidden>'+SAFETY[q.safety]+'</div>' : '')+'</div>';
+      }).join("")+'</div></section>'
+    ).join("");
+
+    host.querySelectorAll("input,textarea").forEach(el => {
+      const ev = (el.type==="radio"||el.type==="checkbox") ? "change" : "input";
+      el.addEventListener(ev, () => {
+        const name = el.name;
+        if(el.type==="checkbox") S[name] = Array.from(host.querySelectorAll('input[name="'+name+'"]:checked')).map(x => x.value);
+        else S[name] = el.value;
+        update();
+      });
+    });
+  }
+
+  function allQs(){ return SECTIONS.flatMap(s => s.qs); }
+  const num = k => { const v = parseFloat(S[k]); return isFinite(v) && v >= 0 ? v : null; };
+  const f = k => S[k]===undefined || S[k]==="" ? null : parseInt(S[k],10);
+  const has = (k,v) => Array.isArray(S[k]) && S[k].includes(v);
+  const optLabel = (id,v) => { const q = allQs().find(x => x.id===id); const o = (q.opts||[]).find(x => x[0]===v); return o ? o[1] : ""; };
+  const round = n => n >= 100 ? Math.round(n/10)*10 : Math.round(n);
+  const fmtN = n => round(n).toLocaleString();
+
+  function update(){
+    allQs().forEach(q => {
+      const el = document.querySelector('[data-q="'+q.id+'"]');
+      if(q.when) el.hidden = !q.when(S);
+      if(q.safety) $("safe-"+q.id).hidden = !(f(q.id) >= 1);
+    });
+    $("readback").innerHTML = readbackHTML();
+  }
+
+  const REL = {parent:"your parent",partner:"your spouse or partner",child:"your adult child",sibling:"your sibling",relative:"a relative",friend:"someone close to you"};
+  const DAYOFF = {week:"this week",month:"this month","6mo":"within the last six months",year:"within the last year",never:"longer ago than you can remember"};
+  const AXNAME = {ax_home:"ownership of the home",ax_money:"the money",ax_access:"access to spending",ax_visible:"visibility into spending",ax_legal:"legal authority",ax_info:"the medical information",ax_cred:"credibility with outsiders"};
+  const PAT = [
+    ["p_insult","insulting or belittling you"],["p_guilt","using guilt to change your decisions"],["p_demand","using medical needs to demand more time than the care requires"],
+    ["p_threat","threatening consequences"],["p_refuse","refusing other help or avoiding things they can do, so the work stays with you"],["p_monitor","monitoring your time, spending, or contacts"],
+    ["p_story","giving others a version of events that undermines you"],["p_isolate","making it harder to have a life outside caregiving"],
+    ["p_money","taking or using your money without your agreement"],["p_employer","using their role as your employer in a paid care program as leverage"],["p_physical","physically hurting you or threatening to"]
+  ];
+  const SELF = [["s_trapped","felt trapped"],["s_body","felt your body stay braced"],["s_alone","felt no one understands"],["s_reflex","settled their emotional state before noticing your own"],["s_unsafe","felt unsafe at home"],["s_temper","worried about losing your temper"],["s_self","had thoughts of being better off not here, or of hurting yourself"]];
+  const AFTER = {accepted:"it’s accepted",discuss:"you talk it through",guilt:"guilt or crying",anger:"anger or yelling",silence:"silent treatment or withdrawal",threat:"threats about housing, money, inheritance, or telling others",health:"their health is described as getting worse because of you",override:"someone else is called in to override you"};
+
+  function readbackHTML(){
+    const out = [], plain = [];
+    const add = (html, text) => { out.push(html); plain.push(text); };
+    const answeredAny = Object.keys(S).some(k => S[k] && (!Array.isArray(S[k]) || S[k].length));
+    if(!answeredAny) return '<p class="empty">Your readback builds here as you answer. Every question is optional.</p>';
+
+    const d = new Date().toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});
+    add('<h4>What I reported</h4><div class="meta">Caregiver Security Check · '+esc(d)+' · Private</div>', "WHAT I REPORTED\nCaregiver Security Check, "+d+" (private)\n");
+
+    if(S.need_text && S.need_text.trim()){
+      add('<div class="sec">What would need to exist for me to step back</div><p class="quote">'+esc(S.need_text.trim())+'</p>', "What would need to exist for me to step back:\n  \""+S.need_text.trim()+"\"\n");
+    }
+
+    // Time
+    const t = [];
+    const h = num("hours"), ph = (S.paid && S.paid!=="no") ? (num("paidh")||0) : 0, yrs = num("years"), nts = num("nights"), rate = num("rate");
+    let who = S.rel ? "You care for "+REL[S.rel] : "You provide care";
+    if(yrs) who += ", and have for about "+fmtN(yrs)+" year"+(yrs===1?"":"s");
+    if(S.live==="yes") who += ". You live together"; else if(S.live==="part") who += ". You live together part of the time";
+    t.push(who+".");
+    if(h){
+      const unpaid = Math.max(0, h - ph);
+      let s = "Care takes about "+fmtN(h)+" hours a week";
+      s += ph ? ", "+fmtN(ph)+" of them paid. That leaves about "+fmtN(unpaid)+" unpaid hours a week." : ", all of it unpaid.";
+      t.push(s);
+      if(unpaid){
+        let y = "That’s roughly "+fmtN(unpaid*52)+" unpaid hours a year";
+        if(rate) y += ", or about $"+fmtN(unpaid*52*rate)+" at $"+fmtN(rate)+" an hour";
+        t.push(y+".");
+        if(yrs && yrs > 1) t.push("If this pattern held across all "+fmtN(yrs)+" years, that’s on the order of "+fmtN(unpaid*52*yrs)+" hours. Early years may have been lighter or heavier; treat this as a scale, not a total.");
+      }
+      if(h > 40) t.push(fmtN(h)+" hours a week is more than a full-time job.");
+    }
+    if(nts) t.push("You’re on call or woken up "+fmtN(nts)+" night"+(nts===1?"":"s")+" a week.");
+    if(S.dayoff) t.push("Your last full day off was "+DAYOFF[S.dayoff]+".");
+    if(S.ownhealth==="often") t.push("You often put off your own medical care."); else if(S.ownhealth==="some") t.push("You sometimes put off your own medical care.");
+    if(t.length) add('<div class="sec">Time</div><p>'+t.map(esc).join(" ")+'</p>', "TIME\n  "+t.join(" ")+"\n");
+
+    // How you got here
+    const hi = [], hiN = [];
+    const EXP = {weeks:"a few weeks",months:"a few months",year:"a year or two"};
+    if(EXP[S.expected]){
+      hi.push("You expected this to last "+EXP[S.expected]+"."+(yrs ? " It has lasted about "+fmtN(yrs)+" year"+(yrs===1?"":"s")+"." : ""));
+      if(yrs && yrs >= 2) hiN.push("This is how temporary help becomes permanent: a yes to one crisis turns into a yes to a whole life, not because anyone chose it, but because everything carried on as if someone had.");
+    } else if(S.expected==="longterm") hi.push("You knew from the start it would be long-term.");
+    else if(S.expected==="noidea") hi.push("It started without anyone deciding how long it would last.");
+    if(S.capture==="many") hi.push("Care has been assigned to you many times because you could do it, without anyone asking whether you agreed.");
+    else if(S.capture==="once") hi.push("Care has been assigned to you once or twice because you could do it, without anyone asking whether you agreed.");
+    if(S.capture==="many") hiN.push("Being capable isn’t the same as agreeing.");
+    if(S.discharge==="once") hi.push("A hospital discharge has depended on you being trained to do a care task.");
+    else if(S.discharge==="more") hi.push("More than once, a hospital discharge has depended on you being trained to do a care task.");
+    if(S.chart==="yes"){ hi.push("A care plan or medical record has named you as responsible for something you never agreed to."); hiN.push("This is what a Caregiver Scope and Consent Record is for: putting what you have and haven’t agreed to in writing, where the care team can see it."); }
+    else if(S.chart==="notsure") hi.push("You haven’t seen what the care plan says you’ve agreed to. You can ask to see it.");
+    if(S.escalate==="yes"||S.escalate==="some"){ hi.push((S.escalate==="some"?"Sometimes you":"You")+" stay partly because, after everything you’ve already given, stopping would feel wrong."); hiN.push("What you’ve given is real whether or not you continue. Stopping wouldn’t erase it."); }
+    if(hi.length) add('<div class="sec">How you got here</div><p>'+hi.map(esc).join(" ")+'</p>'+hiN.map(n => '<p class="aside">'+esc(n)+'</p>').join(""), "HOW I GOT HERE\n  "+hi.join(" ")+(hiN.length?"\n  "+hiN.join("\n  "):"")+"\n");
+
+    // Power
+    const pw = [];
+    const groups = {me:[],them:[],shared:[],other:[]};
+    Object.keys(AXNAME).forEach(k => { if(S[k] && groups[S[k]]) groups[S[k]].push(AXNAME[k]); });
+    const list = a => a.length===1 ? a[0] : a.slice(0,-1).join(", ")+" and "+a[a.length-1];
+    if(groups.me.length) pw.push("You hold "+list(groups.me)+".");
+    if(groups.them.length) pw.push("They hold "+list(groups.them)+".");
+    if(groups.shared.length) pw.push("You share "+list(groups.shared)+".");
+    if(groups.other.length) pw.push("Someone else holds "+list(groups.other)+".");
+    if(S.need==="they") pw.push("They depend on you for daily care.");
+    else if(S.need==="i") pw.push("You depend on them day to day.");
+    else if(S.need==="each") pw.push("You depend on each other day to day.");
+    if(S.belong==="yes") pw.push("Your place in the family would change a lot if you stopped.");
+    else if(S.belong==="some") pw.push("Your place in the family would probably change somewhat if you stopped.");
+    if(S.exit==="no") pw.push("If you stopped tomorrow, you couldn’t cover a month of housing on your own.");
+    else if(S.exit==="unsure") pw.push("You’re not sure you could cover a month of housing on your own if you stopped.");
+    const theyHoldHome = S.ax_home==="them" || S.ax_money==="them";
+    const pwNotes = [];
+    const reportedDep = theyHoldHome || S.exit==="no";
+    if(S.need==="they" && reportedDep)
+      pwNotes.push("You reported that they rely on you for care, and that you rely on the household for housing or money. Most screening tools assume power runs in one direction. What you reported runs in both.");
+    else if(S.need==="each")
+      pwNotes.push("You reported that you depend on each other. Most screening tools assume power runs in one direction.");
+    if(S.belong==="yes") pwNotes.push("When belonging depends on continuing to give care, stepping back can feel like losing the family, not only the role.");
+    if(S.ax_info==="me" && S.ax_cred==="them")
+      pwNotes.push("You hold the information, but they hold the credibility. That combination can mean other people describe your role for you.");
+    if(pw.length || pwNotes.length) add('<div class="sec">Who holds what</div><p>'+pw.map(esc).join(" ")+'</p>'+pwNotes.map(n => '<p class="aside">'+esc(n)+'</p>').join(""), "WHO HOLDS WHAT\n  "+pw.join(" ")+(pwNotes.length?"\n  "+pwNotes.join("\n  "):"")+"\n");
+
+    // Saying no
+    const no = [];
+    const after = (S.after||[]).filter(v => AFTER[v]);
+    if(after.length) no.push("When you say no or set a limit, what usually follows: "+list(after.map(v => AFTER[v]))+".");
+    if(has("after","dontask")) no.push("You said you don’t say no anymore, or never could.");
+    if(S.safe_no) no.push("Saying no feels "+({safe:"safe",mostly:"mostly safe",uneasy:"uneasy",unsafe:"not safe"})[S.safe_no]+".");
+    if(S.stopped==="yes") no.push("You’ve stopped asking for things for yourself because of how it goes."); else if(S.stopped==="some") no.push("You’ve stopped asking for some things for yourself because of how it goes.");
+    if(S.avoidlearn==="yes") no.push("You’ve deliberately avoided learning a task so you wouldn’t become the only plan.");
+    else if(S.avoidlearn==="thought") no.push("You’ve thought about not learning a task so you wouldn’t become the only plan.");
+    const noNote2 = S.avoidlearn==="yes" ? "From outside, that can look like neglect. It’s also a way of setting a limit." : "";
+    const noNote = (has("after","dontask") || S.safe_no==="unsafe" || S.safe_no==="uneasy" || S.stopped==="yes") ? "A limit you can’t enforce safely isn’t really a limit. That’s worth saying out loud to whoever you take this to, especially if you’ve also filled out a Consent Record." : "";
+    if(no.length) add('<div class="sec">Saying no</div><p>'+no.map(esc).join(" ")+'</p>'+[noNote,noNote2].filter(Boolean).map(n => '<p class="aside">'+esc(n)+'</p>').join(""), "SAYING NO\n  "+no.join(" ")+[noNote,noNote2].filter(Boolean).map(n => "\n  "+n).join("")+"\n");
+
+    // Patterns
+    const pats = PAT.filter(([k]) => f(k) >= 1 && !(k==="p_employer" && S.paid!=="ihss"));
+    const strong = pats.filter(([k]) => f(k) >= 2);
+    if(pats.length){
+      const items = pats.map(([k,l]) => l.charAt(0).toUpperCase()+l.slice(1)+": "+FREQ_WORD[f(k)]);
+      const notes = [];
+      if(strong.length >= 2) notes.push("You reported "+strong.length+" of these at least sometimes. Patterns over time, not single incidents, are what counselors and caregiver specialists look at.");
+      const drv = S.driver||[];
+      if(drv.length){
+        const dn = {symptoms:"illness symptoms",meds:"medication or cognitive changes",fear:"fear",before:"patterns from before the illness",mix:"usually a mix",unsure:"you’re not sure"};
+        notes.push("What you think drives it: "+list(drv.map(v => dn[v]))+".");
+      }
+      notes.push("You don’t have to decide whether it’s the illness or the person. Whatever the cause, the effect on you is real. Mechanism explains. It does not erase.");
+      if(S.cog==="intact" && strong.length) notes.push("You described them as cognitively intact. Many tools quietly assume difficult behavior is a symptom. If that isn’t your situation, say so plainly.");
+      if(has("driver","before")) notes.push("If these patterns were there before the illness, that history matters. Tell whoever you show this to.");
+      if(S.prof==="normal") notes.push("When you raised it before, it was called normal caregiver stress.");
+      else if(S.prof==="back") notes.push("When you raised it before, it was turned back on you.");
+      else if(S.prof==="worse") notes.push("When you raised it before, it made things worse. That’s a reason to choose carefully who you share this with next, not a reason to stop.");
+      else if(S.prof==="serious") notes.push("When you raised it before, it was taken seriously.");
+      add('<div class="sec">How it goes between you (past three months)</div><ul>'+items.map(i => '<li>'+esc(i)+'</li>').join("")+'</ul>'+notes.map(n => '<p class="aside">'+esc(n)+'</p>').join(""),
+        "HOW IT GOES BETWEEN US (past three months)\n"+items.map(i => "  - "+i).join("\n")+"\n  "+notes.join("\n  ")+"\n");
+    } else {
+      const vis = PAT.filter(([k]) => !(k==="p_employer" && S.paid!=="ihss"));
+      const nevers = vis.filter(([k]) => f(k)===0).length;
+      if(nevers){
+        const msg = nevers===vis.length ? "You answered “never” to all of these for the past three months." : "You answered “never” to "+nevers+" of these "+vis.length+" and skipped the rest.";
+        add('<div class="sec">How it goes between you</div><p>'+esc(msg)+'</p>', "HOW IT GOES BETWEEN US\n  "+msg+"\n");
+      }
+    }
+
+    // Self
+    const omitted = []; if($("omit_temper").checked) omitted.push("s_temper"); if($("omit_self").checked) omitted.push("s_self");
+    $("flag_wrap").hidden = !omitted.length;
+    const selfs = SELF.filter(([k]) => f(k) >= 1 && !omitted.includes(k));
+    if(selfs.length){
+      const items = selfs.map(([k,l]) => "You’ve "+l+": "+FREQ_WORD[f(k)]);
+      add('<div class="sec">How you’re doing (past month)</div><ul>'+items.map(i => '<li>'+esc(i)+'</li>').join("")+'</ul>', "HOW I'M DOING (past month)\n"+items.map(i => "  - "+i).join("\n")+"\n");
+    }
+
+    // If you stopped
+    const st = [];
+    if(S.backup==="noone") st.push("If you couldn’t continue tomorrow, no one would take over.");
+    else if(S.backup==="maybe") st.push("If you couldn’t continue tomorrow, it’s unclear who would take over.");
+    else if(S.backup==="named") st.push("If you couldn’t continue, a specific person has agreed to take over.");
+    if(S.respite==="never") st.push("No one has ever offered or arranged a break for you.");
+    else if(S.respite==="once") st.push("You’ve been offered a break once or twice.");
+    else if(S.respite==="regular") st.push("You get breaks regularly.");
+    if(S.praise==="often") st.push("People often praise what you do without offering help.");
+    else if(S.praise==="some") st.push("People sometimes praise what you do without offering help.");
+    const plan = [];
+    if(S.plan_call && S.plan_call.trim()) plan.push("Someone I could call: "+S.plan_call.trim());
+    if(S.plan_stay && S.plan_stay.trim()) plan.push("Somewhere I could stay: "+S.plan_stay.trim());
+    if(S.plan_cover && S.plan_cover.trim()) plan.push("Who could cover care for 48 hours: "+S.plan_cover.trim());
+    const praiseN = S.praise==="often" ? "Praise and help aren’t the same thing." : "";
+    if(st.length || plan.length) add('<div class="sec">If I stopped</div>'+(st.length?'<p>'+st.map(esc).join(" ")+'</p>':'')+(praiseN?'<p class="aside">'+esc(praiseN)+'</p>':'')+(plan.length?'<ul>'+plan.map(p => '<li>'+esc(p)+'</li>').join("")+'</ul>':''), "IF I STOPPED\n  "+st.join(" ")+(praiseN?"\n  "+praiseN:"")+(plan.length?"\n"+plan.map(p => "  - "+p).join("\n"):"")+"\n");
+
+    // Next steps
+    const nx = [];
+    if(f("s_self") >= 1 && !omitted.includes("s_self")) nx.push('<strong>Today:</strong> call or text <a href="tel:988">988</a>. You said you’ve had thoughts of being better off not here or of hurting yourself. That comes before everything else on this page.');
+    if(f("p_physical") >= 1 || f("s_unsafe") >= 1 || has("after","threat")) nx.push('<strong>Safety first:</strong> if you’re in danger, call 911. For confidential safety planning, the National Domestic Violence Hotline (<a href="tel:18007997233">1-800-799-7233</a>) covers family members too.');
+    nx.push('<strong>A caregiver support center.</strong> They’re free, they focus on the caregiver, and they’re used to this conversation. In California, the statewide Caregiver Resource Centers; in the Bay Area, that’s Family Caregiver Alliance (caregiver.org). Elsewhere, the Eldercare Locator (<a href="tel:18006771116">1-800-677-1116</a>) can point you to one.');
+    if(S.paid==="ihss" && h && h > ph) nx.push('<strong>A reassessment of your paid hours.</strong> In California that’s IHSS; other states have their own programs. Bring your hours. The gap between authorized and actual hours stays invisible unless someone writes it down. Ask to speak with the county social worker privately, not in front of the person you care for.');
+    if(S.respite==="never" || S.respite==="once" || S.dayoff==="year" || S.dayoff==="never") nx.push('<strong>Respite.</strong> Ask the support center or the care team’s social worker what respite is available. Asking isn’t abandoning anyone.');
+    if(S.backup==="noone" || S.backup==="maybe") nx.push('<strong>A coverage plan.</strong> “No one would take over” is a care-planning gap, not a personal failing. It belongs to the care team as much as to you. Your Consent Record’s “Uncovered care” section is a place to start.');
+    nx.push('<strong>Plan while it’s stable.</strong> The best time to plan a step back is before a crisis forces it, not during one.');
+    nx.push('<strong>Before you share this with any professional,</strong> ask what they’re required to report. Then decide what to show them. You can bring this page and talk it through without handing it over.');
+    add('<div class="sec">Where this could go</div><ul>'+nx.map(n => '<li>'+n+'</li>').join("")+'</ul>', "WHERE THIS COULD GO\n"+nx.map(n => "  - "+n.replace(/<[^>]+>/g,"")).join("\n")+"\n");
+
+    if(omitted.includes("s_self") && f("s_self") >= 1) out.push('<div class="safety noprint"><strong>Only on your screen, not in the copy:</strong> you said you’ve had thoughts of being better off not here or of hurting yourself. Call or text <a href="tel:988">988</a> any time. Keep a version of this for yourself that includes it.</div>');
+    if(omitted.length && $("flag_omit").checked) add('<p class="aside">Some answers were left out of this copy by choice.</p>', "Some answers were left out of this copy by choice.");
+    add('<p class="aside" style="margin-top:18px">This is a record of what I reported. It isn’t a diagnosis of anyone, and it isn’t a finding that anyone is abusive. Private prototype, not validated.</p>', "This is a record of what I reported. It isn't a diagnosis of anyone, and it isn't a finding that anyone is abusive. Private prototype, not validated.");
+    PLAIN = plain.join("\n");
+    return out.join("");
+  }
+  let PLAIN = "";
+
+  function wipe(){
+    S = {}; PLAIN = ""; $("omit_temper").checked = false; $("omit_self").checked = false; $("flag_omit").checked = true;
+    document.querySelectorAll("#questions input, #questions textarea").forEach(el => { if(el.type==="radio"||el.type==="checkbox") el.checked = false; else el.value = ""; });
+    update();
+  }
+
+  $("exit").addEventListener("click", () => { wipe(); try{ location.replace("https://weather.com/"); }catch(e){ location.href = "https://weather.com/"; } });
+  document.addEventListener("keydown", e => { if(e.key==="Escape" && e.shiftKey){ $("exit").click(); } });
+  $("print").addEventListener("click", () => { try{ window.print(); }catch(e){ $("status").textContent = "Printing isn’t available in this view."; } });
+  $("copy").addEventListener("click", async () => {
+    try{ await navigator.clipboard.writeText(PLAIN); $("status").textContent = "Copied. Paste it somewhere only you can open."; }
+    catch(e){ $("status").textContent = "Copy isn’t available here. Use Print or save as PDF instead."; }
+  });
+  $("clear").addEventListener("click", () => { wipe(); $("status").textContent = "Cleared."; window.scrollTo(0,0); });
+
+  render(); update();
+  ["omit_temper","omit_self","flag_omit"].forEach(id => $(id).addEventListener("change", update));
+})();
+</script>
+</body>
+</html>
