@@ -21,6 +21,14 @@
   - Sexual violence: out of scope, by decision. Asking well requires trauma-informed referral
     pathways a reflection aid can't promise. Stated in "Before you start," with a referral line.
 
+  Grammar rule (from Cheré's review: "can't be passive"):
+  - Conduct items stay active, with the other person as the subject ("Threatened...",
+    "Belittled your contributions..."). Don't "soften" them into passive voice; that erases
+    who is exercising power.
+  - Never make the caregiver the grammatical owner of a responsibility they haven't agreed to.
+    Gaps are framed as gaps in the care plan ("who or what is set up to cover...").
+  - Don't make the caregiver judge intent before answering ("felt hurtful," not "meant to hurt").
+
   Readback rule: repeat what was reported, say what was skipped, state principles.
   Don't explain why something happened in the caregiver's household.
 
@@ -278,7 +286,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
       {id:"praise", type:"single", label:"Do people praise what you do without offering help?", opts:[["no","No"],["some","Sometimes"],["often","Often"]]},
       {id:"plan_call", type:"text", label:"Someone you could call if things got bad", help:"A first name is enough. Optional."},
       {id:"plan_stay", type:"text", label:"Somewhere you could stay for a night if you needed to", help:"Optional."},
-      {id:"plan_cover", type:"text", label:"Who or what could cover their care for 48 hours", help:"A person, an agency, respite, or “I don’t know.” Optional."},
+      {id:"plan_cover", type:"text", label:"If you were away for 48 hours, who or what is set up to cover their care?", help:"A person, an agency, or respite. If the honest answer is “no one” or “I don’t know,” write that. It’s a gap in the care plan, not a personal failing, and it’s exactly what a care team needs to hear."},
       {id:"need_text", type:"textarea", label:"What would need to exist for you to step back, even a little?", help:"In your own words. This goes at the top of your readback."}
     ]}
   ];
@@ -452,7 +460,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
     if(S.stopped==="yes") no.push("Because of how saying no usually goes, you’ve stopped asking for things for yourself."); else if(S.stopped==="some") no.push("Because of how saying no usually goes, you’ve stopped asking for some things for yourself.");
     if(S.avoidlearn==="yes") no.push("You’ve deliberately avoided learning a task so you wouldn’t become the only plan.");
     else if(S.avoidlearn==="thought") no.push("You’ve thought about not learning a task so you wouldn’t become the only plan.");
-    const noNote2 = S.avoidlearn==="yes" ? "From outside, that can look like neglect. It’s also a way of setting a limit." : "";
+    const noNote2 = S.avoidlearn==="yes" ? "Choosing not to become the only plan is a way of setting a limit." : "";
     const noNote = (has("after","dontask") || S.safe_no==="unsafe" || S.safe_no==="uneasy" || S.stopped==="yes") ? "A limit you can’t enforce safely isn’t really a limit. That’s worth saying out loud to whoever you take this to, especially if you’ve also filled out a Consent Record." : "";
     if(no.length) add('<div class="sec">Saying no</div><p>'+no.map(esc).join(" ")+'</p>'+[noNote,noNote2].filter(Boolean).map(n => '<p class="aside">'+esc(n)+'</p>').join(""), "SAYING NO\n  "+no.join(" ")+[noNote,noNote2].filter(Boolean).map(n => "\n  "+n).join("")+"\n");
 
@@ -511,7 +519,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
     const plan = [];
     if(S.plan_call && S.plan_call.trim()) plan.push("Someone I could call: "+S.plan_call.trim());
     if(S.plan_stay && S.plan_stay.trim()) plan.push("Somewhere I could stay: "+S.plan_stay.trim());
-    if(S.plan_cover && S.plan_cover.trim()) plan.push("Who could cover care for 48 hours: "+S.plan_cover.trim());
+    if(S.plan_cover && S.plan_cover.trim()) plan.push("Set up to cover care for 48 hours: "+S.plan_cover.trim());
     const praiseN = S.praise==="often" ? "Praise and help aren’t the same thing." : "";
     if(st.length || plan.length) add('<div class="sec">If I needed a break, or had to stop</div>'+(st.length?'<p>'+st.map(esc).join(" ")+'</p>':'')+(praiseN?'<p class="aside">'+esc(praiseN)+'</p>':'')+(plan.length?'<ul>'+plan.map(p => '<li>'+esc(p)+'</li>').join("")+'</ul>':''), "IF I NEEDED A BREAK, OR HAD TO STOP\n  "+st.join(" ")+(praiseN?"\n  "+praiseN:"")+(plan.length?"\n"+plan.map(p => "  - "+p).join("\n"):"")+"\n");
 
