@@ -38,6 +38,7 @@
   Readback rule: repeat what was reported, say what was skipped, state principles.
   Don't explain why something happened in the caregiver's household.
 
+  Font: Atkinson Hyperlegible, self-hosted at /consent/fonts/ (same site; falls back to system fonts).
   Privacy: no storage, no external requests (verify in the network panel every release),
   neutral tab title, Quick exit, mandated-reporter notice before any section.
 -->
@@ -48,6 +49,9 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Care notes</title>
 <style>
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:400;font-display:swap;src:url("/consent/fonts/atkinson-hyperlegible-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:700;font-display:swap;src:url("/consent/fonts/atkinson-hyperlegible-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-style:italic;font-weight:400;font-display:swap;src:url("/consent/fonts/atkinson-hyperlegible-latin-400-italic.woff2") format("woff2")}
 :root{
   --bg:#FAF8F6; --surface:#FFFFFF; --sunk:#F2EEE9; --ink:#222222; --muted:#5C5752; --line:#E3DDD6;
   --kelp:#2B6696; --kelp-ink:#FFFFFF; --kelp-soft:#DDEBF6; --link:#9E561A;
@@ -55,7 +59,7 @@
   --decline:#7A3355; --decline-soft:#F2DCE6;
   --focus:#1D5FBF;
   --serif:Georgia, "Times New Roman", serif;
-  --sans:system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --sans:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark){
