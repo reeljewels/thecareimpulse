@@ -59,6 +59,7 @@ html{scroll-padding-top:70px;scroll-behavior:smooth}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.55;-webkit-text-size-adjust:100%;padding-bottom:env(safe-area-inset-bottom,0px)}
 a{color:var(--link);text-underline-offset:3px}
+a[href^="tel"]{white-space:nowrap}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
 .wrap{max-width:760px;margin:0 auto;padding:0 20px 64px}
 
@@ -146,7 +147,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
     <li><a href="#no">5 Saying no</a></li>
     <li><a href="#between">6 Between you</a></li>
     <li><a href="#you">7 How you are</a></li>
-    <li><a href="#stop">8 If you stopped</a></li>
+    <li><a href="#stop">8 A break, or stopping</a></li>
     <li><a href="#readback-step">9 Read it back</a></li>
   </ol>
 </nav>
@@ -161,11 +162,19 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
   <section class="step" id="start">
     <div class="step-head"><span class="step-num">1</span><h2>Before you start</h2></div>
     <div class="card" style="padding:16px 20px">
+      <div class="safety" style="margin:0 0 12px"><strong>If you need help now, you don’t have to finish this first.</strong>
+        <ul style="margin:6px 0 0;padding-left:20px">
+          <li>Thoughts of hurting yourself, or of being better off not here: call or text <a href="tel:988">988</a>, any time.</li>
+          <li>Danger right now: call <a href="tel:911">911</a>.</li>
+          <li>Feeling unsafe at home, or being threatened or hurt by a family member: National Domestic Violence Hotline, <a href="tel:18007997233">1-800-799-7233</a>.</li>
+          <li>Sexual violence, which this tool doesn’t ask about: National Sexual Assault Hotline, <a href="tel:18006564673">1-800-656-4673</a>.</li>
+        </ul>
+        <span style="display:block;margin-top:6px;font-size:14px">All are free, confidential, and open 24/7.</span></div>
+      <p style="margin:0 0 10px"><strong>Go at your own pace.</strong> Remembering all of this can bring things up, sometimes more than you expect. That’s a normal reaction, not a sign something’s wrong with you. Every question is optional. You can skip anything, stop, or come back another time. If it stirs up a lot, talk to someone you trust, or call or text <a href="tel:988">988</a>.</p>
       <p style="margin:0 0 10px"><strong>This is yours.</strong> It isn’t signed by the person you care for, and it isn’t sent anywhere. You decide if anyone else sees it.</p>
       <p style="margin:0 0 10px"><strong>Nothing is saved.</strong> If you close or refresh this page, your answers are gone. That’s on purpose. In a shared household, saved answers can be found. To keep a copy, print it or save it as a PDF at the end, and store it somewhere only you can open.</p>
       <p style="margin:0 0 10px"><strong>Quick exit</strong>, at the top of the screen, clears everything and opens a weather page. It can’t erase your browser history or anything you’ve already printed or saved. If someone else uses this device, open this page in a private or incognito window.</p>
       <p style="margin:0 0 10px"><strong>Before you share anything you write here:</strong> counselors, social workers, and clinicians are often mandated reporters. Some answers could require them to make a report. Ask what they’d have to report before you show them. More on this in section 6.</p>
-      <p style="margin:0 0 10px"><strong>What this doesn’t ask about:</strong> sexual violence. If that’s part of what’s happening, the National Sexual Assault Hotline is confidential and open 24/7: <a href="tel:18006564673">1-800-656-4673</a>.</p>
       <p style="margin:0">This isn’t a diagnosis, and it doesn’t label anyone as abusive. It puts what you live with into words, so you can take it to someone who can help, like a caregiver support center, a counselor, or a social worker you trust.</p>
     </div>
   </section>
@@ -174,7 +183,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
 
   <section class="step" id="readback-step">
     <div class="step-head"><span class="step-num">9</span><h2>Read it back</h2></div>
-    <p class="hint">This is what you reported, in plain language. Read it slowly. Many caregivers have never seen the whole picture in one place.</p>
+    <p class="hint">This is what you reported, in plain language. Read it slowly. Many caregivers have never seen the whole picture in one place, and seeing it can hit hard. If it does, you don’t have to sort it out alone: talk to someone you trust, or call or text <a href="tel:988">988</a>.</p>
     <div class="omit noprint"><strong>Making a copy to share?</strong> You can leave these out of the printed or copied version:<br><label class="chk"><input type="checkbox" id="omit_temper"> My answer about temper</label><label class="chk"><input type="checkbox" id="omit_self"> My answer about self-harm</label><label class="chk" id="flag_wrap" hidden><input type="checkbox" id="flag_omit" checked> Note on the copy that some answers were left out</label><span class="aside">Before you share, ask the person what they’d be required to report.</span></div>
     <div class="readback" id="readback"></div>
     <div class="actions">
@@ -226,25 +235,26 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
       {id:"ax_access", type:"axis", label:"Access: who can spend household money without asking?"},
       {id:"ax_visible", type:"axis", label:"Visibility: who can see what the other spends?"},
       {id:"ax_legal", type:"axis", label:"Legal: who holds power of attorney or makes legal decisions?"},
-      {id:"ax_info", type:"axis", label:"Information: who knows the medications, doctors, and history?"},
+      {id:"ax_info", type:"axis", label:"Information: who knows the most about the medications, doctors, and history?", help:"Everyone usually knows a little. Who knows the most?"},
       {id:"ax_cred", type:"axis", label:"Credibility: when you two disagree, whose account do doctors, social workers, or family tend to believe?"},
-      {id:"belong", type:"single", label:"Would your place in the family change if you stopped caregiving?", opts:[["no","No"],["some","Probably somewhat"],["yes","Yes, a lot"],["unsure","Not sure"]]},
+      {id:"belong", type:"single", label:"Would your place with the people around you, like family, friends, or community, change if you stopped caregiving?", opts:[["no","No"],["some","Probably somewhat"],["yes","Yes, a lot"],["unsure","Not sure"]]},
       {id:"exit", type:"single", label:"If you stopped caregiving tomorrow, could you cover a month of housing on your own?", opts:[["yes","Yes"],["unsure","Not sure"],["no","No"]]}
     ]},
     {id:"no", num:5, title:"Saying no", hint:"A limit you can’t enforce isn’t really a limit. Think about the last few times you said no, set a limit, or asked for something for yourself.", qs:[
       {id:"after", type:"multi", label:"What usually happens after you say no or set a limit?", help:"Choose all that apply.", opts:[["accepted","It’s accepted"],["discuss","We talk it through"],["guilt","Guilt or crying"],["anger","Anger or yelling"],["silence","Silent treatment or withdrawal"],["threat","Threats about housing, money, inheritance, or telling others"],["health","Their health is described as getting worse because of me"],["override","Someone else is called in to override me"],["dontask","I don’t say no anymore, or I never could"]]},
       {id:"safe_no", type:"single", label:"How safe does it feel to say no?", opts:[["safe","Safe"],["mostly","Mostly safe"],["uneasy","Uneasy"],["unsafe","Not safe"]]},
-      {id:"stopped", type:"single", label:"Have you stopped asking for things for yourself because of how it goes?", opts:[["no","No"],["some","Some things"],["yes","Yes"]]},
+      {id:"stopped", type:"single", label:"Because of reactions like the ones above, have you stopped asking for things for yourself?", opts:[["no","No"],["some","Some things"],["yes","Yes"]]},
       {id:"avoidlearn", type:"single", label:"Have you ever deliberately avoided learning a task so you wouldn’t become the only plan?", opts:[["no","No"],["thought","I’ve thought about it"],["yes","Yes"]]}
     ]},
     {id:"between", num:6, title:"How it goes between you", notice:true, hint:"In the past three months, how often has the person you care for done each of these? Patterns over time matter more than any single moment.", qs:[
-      {id:"p_insult", type:"freq", label:"Insulted, belittled, or criticized you in ways that felt meant to hurt"},
+      {id:"p_insult", type:"freq", label:"Insulted, belittled, or criticized you in ways that felt hurtful"},
       {id:"p_guilt", type:"freq", label:"Used guilt to change a decision you’d made about your time, plans, or leaving"},
-      {id:"p_demand", type:"freq", label:"Used their medical needs to demand more of your time than the care actually requires"},
-      {id:"p_threat", type:"freq", label:"Threatened consequences if you didn’t comply, such as cutting you off, ending your housing, withdrawing support, or telling others"},
-      {id:"p_refuse", type:"freq", label:"Refused other help, like aides, family, or services, or avoided doing things they can do, so the work stays with you"},
-      {id:"p_monitor", type:"freq", label:"Questioned or monitored your time, spending, or who you talk to"},
-      {id:"p_story", type:"freq", label:"Gave others a version of events that undermined you, or overstated what you’d agreed to"},
+      {id:"p_demand", type:"freq", label:"Exaggerated or invented medical needs, or leaned on real ones, to demand more of your time and attention than the care requires"},
+      {id:"p_threat", type:"freq", label:"Threatened consequences if you didn’t do what they wanted, such as:", help:"Cutting you off · Ending your housing · Changing an inheritance · Withdrawing support · Telling others"},
+      {id:"p_refuse", type:"freq", label:"Added to your load by turning down other help or services, or by leaving you things they can still do themselves", help:"Like getting their own water, finding clothes, or simple cooking"},
+      {id:"p_monitor", type:"freq", label:"Questioned or monitored your time, spending, or conversations"},
+      {id:"p_story", type:"freq", label:"Belittled your contributions to others, or told them you’d agreed to more than you had"},
+      {id:"p_expect", type:"freq", label:"Expected more than one person can realistically do", help:"Like being available around the clock, never making mistakes, or anticipating needs no one mentioned"},
       {id:"p_isolate", type:"freq", label:"Made it harder to see friends, work, or have a life outside caregiving"},
       {id:"p_money", type:"freq", label:"Taken or used your money without your agreement, or pressured you to spend your own money on their needs"},
       {id:"p_employer", type:"freq", label:"If they’re officially your employer in that program, used that role as leverage, such as not signing timesheets, threatening to fire you, or expecting unpaid hours", when:s => s.paid==="ihss"},
@@ -259,10 +269,11 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
       {id:"s_reflex", type:"freq", label:"Settled their emotional state before noticing your own"},
       {id:"s_unsafe", type:"freq", label:"Felt unsafe at home", safety:"unsafe"},
       {id:"s_temper", type:"freq", label:"Worried you might lose control of your temper", help:"Many caregivers feel this, and saying it early is how support arrives before anything happens. Answering here is private. But if you share your readback, this answer can be misread by someone with power over you, like a clinician, IHSS, or family. You can leave it out of the copy you print or share."},
-      {id:"s_self", type:"freq", label:"Had thoughts that you’d be better off not here, or of hurting yourself", safety:"self"}
+      {id:"s_self", type:"freq", label:"Had thoughts that you’d be better off not here, or of hurting yourself", safety:"self", helpHtml:"Long-term caregivers have these thoughts more often than people realize. It doesn’t mean you’ve failed. It usually means you’ve been carrying too much, alone, for too long. You don’t have to wait for a crisis to talk to someone: call or text <a href=\"tel:988\">988</a> any time, day or night. Caregivers call too. Your answer here stays private."}
     ]},
-    {id:"stop", num:8, title:"If you stopped", hint:"This is what keeps most caregivers in place: not the work itself, but the absence of anyone to hand it to.", qs:[
-      {id:"backup", type:"single", label:"If you couldn’t continue tomorrow, would someone take over?", opts:[["named","Yes, a specific person who has agreed"],["maybe","Maybe, but it’s unclear"],["noone","No one"]]},
+    {id:"stop", num:8, title:"If you needed a break, or had to stop", hint:"What often keeps caregivers in place isn’t the work itself. It’s the absence of someone else competent and caring to carry it on.", qs:[
+      {id:"backup", type:"single", label:"If you couldn’t continue tomorrow, would someone competent and caring take over?", opts:[["named","Yes, a specific person who has agreed"],["maybe","Maybe, but it’s unclear"],["noone","No one"]]},
+      {id:"hasplan", type:"single", label:"Do you have a plan for if you needed a break, or had to stop?", opts:[["yes","Yes, and others know it"],["partly","Partly"],["no","No"]]},
       {id:"respite", type:"single", label:"Has anyone ever offered or arranged a break for you?", opts:[["regular","Yes, regularly"],["once","Once or twice"],["never","Never"]]},
       {id:"praise", type:"single", label:"Do people praise what you do without offering help?", opts:[["no","No"],["some","Sometimes"],["often","Often"]]},
       {id:"plan_call", type:"text", label:"Someone you could call if things got bad", help:"A first name is enough. Optional."},
@@ -277,7 +288,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
   let S = {};
 
   const SAFETY = {
-    self:'<strong>If you’re having thoughts like this, you don’t have to wait.</strong> Call or text <a href="tel:988">988</a>, the Suicide &amp; Crisis Lifeline, any time. It’s for caregivers at the end of their rope, too, not only for emergencies.',
+    self:'<strong>Thank you for saying it, even here.</strong> Call or text <a href="tel:988">988</a>, the Suicide &amp; Crisis Lifeline, any time, to talk with someone who understands. It’s for anyone carrying too much, caregivers included, not only emergencies. If you might act on these thoughts right now, call 911 or go to the nearest emergency room.',
     unsafe:'<strong>If you’re in danger right now, call 911.</strong> For confidential support and safety planning, the National Domestic Violence Hotline is <a href="tel:18007997233">1-800-799-7233</a>. It covers family members, not only partners.'
   };
 
@@ -303,7 +314,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
         else if(q.type==="text") body = '<input type="text" id="i-'+q.id+'" name="'+q.id+'" aria-labelledby="l-'+q.id+'" autocomplete="off">';
         else if(q.type==="textarea") body = '<textarea id="i-'+q.id+'" name="'+q.id+'" aria-labelledby="l-'+q.id+'"></textarea>';
         return '<div class="q" data-q="'+q.id+'"><span class="q-label" id="l-'+q.id+'">'+esc(q.label)+'</span>'+
-          (q.help ? '<div class="q-help">'+esc(q.help)+'</div>' : '')+body+
+          (q.help ? '<div class="q-help">'+esc(q.help)+'</div>' : '')+(q.helpHtml ? '<div class="q-help">'+q.helpHtml+'</div>' : '')+body+
           (q.safety ? '<div class="safety" id="safe-'+q.id+'" hidden>'+SAFETY[q.safety]+'</div>' : '')+'</div>';
       }).join("")+'</div></section>'
     ).join("");
@@ -338,11 +349,11 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
 
   const REL = {parent:"your parent",partner:"your spouse or partner",child:"your adult child",sibling:"your sibling",relative:"a relative",friend:"someone close to you"};
   const DAYOFF = {week:"this week",month:"this month","6mo":"within the last six months",year:"within the last year",never:"longer ago than you can remember"};
-  const AXNAME = {ax_home:"ownership of the home",ax_money:"the money",ax_access:"access to spending",ax_visible:"visibility into spending",ax_legal:"legal authority",ax_info:"the medical information",ax_cred:"credibility with outsiders"};
+  const AXNAME = {ax_home:"ownership of the home",ax_money:"the money",ax_access:"access to spending",ax_visible:"visibility into spending",ax_legal:"legal authority",ax_info:"most of the medical information",ax_cred:"credibility with outsiders"};
   const PAT = [
-    ["p_insult","insulting or belittling you"],["p_guilt","using guilt to change your decisions"],["p_demand","using medical needs to demand more time than the care requires"],
-    ["p_threat","threatening consequences"],["p_refuse","refusing other help or avoiding things they can do, so the work stays with you"],["p_monitor","monitoring your time, spending, or contacts"],
-    ["p_story","giving others a version of events that undermines you"],["p_isolate","making it harder to have a life outside caregiving"],
+    ["p_insult","insulting or belittling you"],["p_guilt","using guilt to change your decisions"],["p_demand","using medical needs, real, exaggerated, or invented, to demand more of your time and attention"],
+    ["p_threat","threatening consequences"],["p_refuse","adding to your load by turning down other help, or leaving you things they can still do themselves"],["p_monitor","monitoring your time, spending, or conversations"],
+    ["p_story","belittling your contributions to others, or overstating what you agreed to"],["p_expect","expecting more than one person can realistically do"],["p_isolate","making it harder to have a life outside caregiving"],
     ["p_money","taking or using your money without your agreement"],["p_employer","using their role as your employer in a paid care program as leverage"],["p_physical","physically hurting you or threatening to"]
   ];
   const SELF = [["s_trapped","felt trapped"],["s_body","felt your body stay braced"],["s_alone","felt no one understands"],["s_reflex","settled their emotional state before noticing your own"],["s_unsafe","felt unsafe at home"],["s_temper","worried about losing your temper"],["s_self","had thoughts of being better off not here, or of hurting yourself"]];
@@ -416,8 +427,8 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
     if(S.need==="they") pw.push("They depend on you for daily care.");
     else if(S.need==="i") pw.push("You depend on them day to day.");
     else if(S.need==="each") pw.push("You depend on each other day to day.");
-    if(S.belong==="yes") pw.push("Your place in the family would change a lot if you stopped.");
-    else if(S.belong==="some") pw.push("Your place in the family would probably change somewhat if you stopped.");
+    if(S.belong==="yes") pw.push("Your place with the people around you would change a lot if you stopped.");
+    else if(S.belong==="some") pw.push("Your place with the people around you would probably change somewhat if you stopped.");
     if(S.exit==="no") pw.push("If you stopped tomorrow, you couldn’t cover a month of housing on your own.");
     else if(S.exit==="unsure") pw.push("You’re not sure you could cover a month of housing on your own if you stopped.");
     const theyHoldHome = S.ax_home==="them" || S.ax_money==="them";
@@ -427,9 +438,9 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
       pwNotes.push("You reported that they rely on you for care, and that you rely on the household for housing or money. Most screening tools assume power runs in one direction. What you reported runs in both.");
     else if(S.need==="each")
       pwNotes.push("You reported that you depend on each other. Most screening tools assume power runs in one direction.");
-    if(S.belong==="yes") pwNotes.push("When belonging depends on continuing to give care, stepping back can feel like losing the family, not only the role.");
+    if(S.belong==="yes") pwNotes.push("When belonging depends on continuing to give care, stepping back can feel like losing your place, not only the role.");
     if(S.ax_info==="me" && S.ax_cred==="them")
-      pwNotes.push("You hold the information, but they hold the credibility. That combination can mean other people describe your role for you.");
+      pwNotes.push("You hold most of the information, but they hold the credibility. That combination can mean other people describe your role for you.");
     if(pw.length || pwNotes.length) add('<div class="sec">Who holds what</div><p>'+pw.map(esc).join(" ")+'</p>'+pwNotes.map(n => '<p class="aside">'+esc(n)+'</p>').join(""), "WHO HOLDS WHAT\n  "+pw.join(" ")+(pwNotes.length?"\n  "+pwNotes.join("\n  "):"")+"\n");
 
     // Saying no
@@ -438,7 +449,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
     if(after.length) no.push("When you say no or set a limit, what usually follows: "+list(after.map(v => AFTER[v]))+".");
     if(has("after","dontask")) no.push("You said you don’t say no anymore, or never could.");
     if(S.safe_no) no.push("Saying no feels "+({safe:"safe",mostly:"mostly safe",uneasy:"uneasy",unsafe:"not safe"})[S.safe_no]+".");
-    if(S.stopped==="yes") no.push("You’ve stopped asking for things for yourself because of how it goes."); else if(S.stopped==="some") no.push("You’ve stopped asking for some things for yourself because of how it goes.");
+    if(S.stopped==="yes") no.push("Because of how saying no usually goes, you’ve stopped asking for things for yourself."); else if(S.stopped==="some") no.push("Because of how saying no usually goes, you’ve stopped asking for some things for yourself.");
     if(S.avoidlearn==="yes") no.push("You’ve deliberately avoided learning a task so you wouldn’t become the only plan.");
     else if(S.avoidlearn==="thought") no.push("You’ve thought about not learning a task so you wouldn’t become the only plan.");
     const noNote2 = S.avoidlearn==="yes" ? "From outside, that can look like neglect. It’s also a way of setting a limit." : "";
@@ -486,9 +497,12 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
 
     // If you stopped
     const st = [];
-    if(S.backup==="noone") st.push("If you couldn’t continue tomorrow, no one would take over.");
-    else if(S.backup==="maybe") st.push("If you couldn’t continue tomorrow, it’s unclear who would take over.");
+    if(S.backup==="noone") st.push("If you couldn’t continue tomorrow, no one competent and caring would take over.");
+    else if(S.backup==="maybe") st.push("If you couldn’t continue tomorrow, it’s unclear whether someone competent and caring would take over.");
     else if(S.backup==="named") st.push("If you couldn’t continue, a specific person has agreed to take over.");
+    if(S.hasplan==="yes") st.push("You have a plan for a break or for stopping, and others know it.");
+    else if(S.hasplan==="partly") st.push("You have part of a plan for a break or for stopping.");
+    else if(S.hasplan==="no") st.push("You don’t have a plan for a break or for stopping yet.");
     if(S.respite==="never") st.push("No one has ever offered or arranged a break for you.");
     else if(S.respite==="once") st.push("You’ve been offered a break once or twice.");
     else if(S.respite==="regular") st.push("You get breaks regularly.");
@@ -499,7 +513,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
     if(S.plan_stay && S.plan_stay.trim()) plan.push("Somewhere I could stay: "+S.plan_stay.trim());
     if(S.plan_cover && S.plan_cover.trim()) plan.push("Who could cover care for 48 hours: "+S.plan_cover.trim());
     const praiseN = S.praise==="often" ? "Praise and help aren’t the same thing." : "";
-    if(st.length || plan.length) add('<div class="sec">If I stopped</div>'+(st.length?'<p>'+st.map(esc).join(" ")+'</p>':'')+(praiseN?'<p class="aside">'+esc(praiseN)+'</p>':'')+(plan.length?'<ul>'+plan.map(p => '<li>'+esc(p)+'</li>').join("")+'</ul>':''), "IF I STOPPED\n  "+st.join(" ")+(praiseN?"\n  "+praiseN:"")+(plan.length?"\n"+plan.map(p => "  - "+p).join("\n"):"")+"\n");
+    if(st.length || plan.length) add('<div class="sec">If I needed a break, or had to stop</div>'+(st.length?'<p>'+st.map(esc).join(" ")+'</p>':'')+(praiseN?'<p class="aside">'+esc(praiseN)+'</p>':'')+(plan.length?'<ul>'+plan.map(p => '<li>'+esc(p)+'</li>').join("")+'</ul>':''), "IF I NEEDED A BREAK, OR HAD TO STOP\n  "+st.join(" ")+(praiseN?"\n  "+praiseN:"")+(plan.length?"\n"+plan.map(p => "  - "+p).join("\n"):"")+"\n");
 
     // Next steps
     const nx = [];
