@@ -105,8 +105,18 @@ input[type=date]{display:block;min-width:0;max-width:100%;-webkit-appearance:non
 input[type=date]::-webkit-date-and-time-value{text-align:left}
 
 /* Tasks */
-.group{margin-top:26px}
-.group:first-child{margin-top:0}
+.group{border-top:1px solid var(--line)}
+.group:first-child{border-top:0}
+.group > summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 0;font-family:var(--serif);font-weight:650;font-size:19px}
+.group > summary::-webkit-details-marker{display:none}
+.group > summary .g-name::before{content:"";display:inline-block;width:.5em;height:.5em;border-right:2.5px solid var(--kelp);border-bottom:2.5px solid var(--kelp);transform:rotate(-45deg);margin:0 .6em .12em .1em;transition:transform .15s}
+.group[open] > summary .g-name::before{transform:rotate(45deg)}
+.g-count{font-family:var(--sans);font-weight:400;font-size:14px;color:var(--muted);white-space:nowrap}
+.g-count.done{color:var(--kelp);font-weight:700}
+.g-actions{display:flex;flex-wrap:wrap;gap:2px 16px;margin:0 0 4px}
+.g-actions button.quiet{font-size:15px;min-height:38px;padding:6px 0}
+.g-note{width:100%;margin:0 0 6px;font-size:13px;color:var(--muted)}
+.group[open]{padding-bottom:10px}
 h3{font-family:var(--serif);font-weight:650;font-size:19px;margin:0 0 10px}
 .task{border-top:1px solid var(--line);padding:14px 0}
 .task:first-of-type{border-top:0}
@@ -232,7 +242,7 @@ html{scroll-behavior:smooth}
 
   <section class="step" id="tasks">
     <div class="step-head"><span class="step-num">2</span><h2>Task by task</h2></div>
-    <p class="hint">Answer the tasks the care plan expects from you. Anything you leave unanswered will appear on your record as “Not selected, so not offered.” If the patient handles a task themselves, mark “Patient manages this” so it isn’t assigned to you. You can also mark a task “Doesn’t apply.”</p>
+    <p class="hint">Tap a section to open it. If a whole section doesn’t apply, or the patient handles it, use the shortcut at the top of that section. Answer the tasks the care plan expects from you. Anything you leave unanswered will appear on your record as “Not selected, so not offered.” If the patient handles a task themselves, mark “Patient manages this” so it isn’t assigned to you. You can also mark a task “Doesn’t apply.”</p>
     <div class="card" id="task-list"></div>
     <div class="add-row">
       <input type="text" id="custom-task" placeholder="Add a task that isn’t listed" aria-label="Add a task that isn’t listed">
@@ -440,15 +450,39 @@ html{scroll-behavior:smooth}
     return div;
   }
 
+  let openGroups = null;
   function renderTasks(){
     const host = $("task-list"); host.innerHTML = "";
     const groups = {};
     allTasks().forEach(t => { (groups[t.group] = groups[t.group] || []).push(t); });
-    Object.keys(groups).forEach(g => {
-      const sec = document.createElement("div"); sec.className = "group";
-      sec.innerHTML = "<h3>"+esc(g)+"</h3>";
+    const names = Object.keys(groups);
+    if(!openGroups) openGroups = new Set(names.slice(0,1));
+    names.forEach(g => {
+      const sec = document.createElement("details"); sec.className = "group"; sec.dataset.group = g;
+      if(openGroups.has(g)) sec.open = true;
+      sec.innerHTML = '<summary><span class="g-name">'+esc(g)+'</span><span class="g-count"></span></summary>' +
+        '<div class="g-actions"><button type="button" class="quiet" data-bulk="na">Mark the rest “Doesn’t apply”</button>' +
+        '<button type="button" class="quiet" data-bulk="patient">Patient manages the rest</button>' +
+        '<p class="g-note">Only fills in tasks you haven’t answered. Anything you’ve already marked, including “Not taking this on,” stays as it is.</p></div>';
       groups[g].forEach(t => sec.appendChild(taskRow(t)));
+      sec.addEventListener("toggle", () => { sec.open ? openGroups.add(g) : openGroups.delete(g); });
+      sec.querySelectorAll("[data-bulk]").forEach(b => b.addEventListener("click", () => {
+        groups[g].forEach(t => { const cur = state.tasks[t.id] || {}; if(!cur.resp) state.tasks[t.id] = Object.assign({}, cur, {resp:b.dataset.bulk}); });
+        save(); renderTasks(); refresh();
+      }));
       host.appendChild(sec);
+    });
+    updateCounts();
+  }
+  function updateCounts(){
+    const groups = {};
+    allTasks().forEach(t => { (groups[t.group] = groups[t.group] || []).push(t); });
+    document.querySelectorAll("#task-list details.group").forEach(sec => {
+      const list = groups[sec.dataset.group] || [];
+      const n = list.filter(t => state.tasks[t.id] && state.tasks[t.id].resp).length;
+      const el = sec.querySelector(".g-count");
+      el.textContent = n === list.length ? "All answered" : n+" of "+list.length+" answered";
+      el.classList.toggle("done", n === list.length);
     });
   }
 
@@ -608,7 +642,7 @@ html{scroll-behavior:smooth}
     $("mailto").href = "mailto:"+encodeURIComponent(state.fields.team||"")+"?subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(encodeURIComponent(body).length > 1800 ? "Paste your record here. (Use Copy email on the form, since long records can get cut off in email links.)" : body);
   }
 
-  function refresh(){ renderUncovered(); renderRecord(); renderEmail(); }
+  function refresh(){ updateCounts(); renderUncovered(); renderRecord(); renderEmail(); }
 
   function recordDocument(){
     return '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Caregiver Scope and Consent Record</title><style>body{font-family:Georgia,serif;max-width:700px;margin:40px auto;padding:0 20px;color:#111;line-height:1.5}table{width:100%;border-collapse:collapse;margin:8px 0 18px}td,th{text-align:left;padding:6px;border-bottom:1px solid #ccc;vertical-align:top;font-size:15px}.sig{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:30px}.sig div{border-top:1px solid #111;padding-top:6px;font-size:13px}.badge{font-weight:700}.meta{color:#444}.keep{break-inside:avoid;page-break-inside:avoid}.sec{font-weight:700;margin-top:16px}.tag{color:#555;font-size:13px}@page{margin:0.6in}@media print{body{margin:0 auto;padding:0}}</style></head><body>'+$("record").innerHTML+'<p style="font-size:12px;color:#555;margin-top:30px">Prepared '+esc(fmt(today()))+'. A communication tool, not a legal document, and not legal or medical advice.</p></body></html>';
@@ -682,7 +716,7 @@ html{scroll-behavior:smooth}
     state = {fields:{start:today()}, tasks:{}, custom:[], overnight:"", oncall:"", setting:"hospital", startAuto:true};
     FIELDS.forEach(f => $(f).value = state.fields[f] || "");
     document.querySelectorAll('input[name="overnight"],input[name="oncall"]').forEach(r => r.checked=false);
-    syncSetting(); renderTasks(); refresh(); status("Cleared.");
+    openGroups = null; syncSetting(); renderTasks(); refresh(); status("Cleared.");
     window.scrollTo(0,0);
   });
 
