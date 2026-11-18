@@ -461,8 +461,8 @@ html{scroll-behavior:smooth}
       const sec = document.createElement("details"); sec.className = "group"; sec.dataset.group = g;
       if(openGroups.has(g)) sec.open = true;
       sec.innerHTML = '<summary><span class="g-name">'+esc(g)+'</span><span class="g-count"></span></summary>' +
-        '<div class="g-actions"><button type="button" class="quiet" data-bulk="na">Mark the rest “Doesn’t apply”</button>' +
-        '<button type="button" class="quiet" data-bulk="patient">Patient manages the rest</button>' +
+        '<div class="g-actions"><button type="button" class="quiet" data-bulk="na">Mark unanswered “Doesn’t apply”</button>' +
+        '<button type="button" class="quiet" data-bulk="patient">Patient manages unanswered tasks</button>' +
         '<p class="g-note">Only fills in tasks you haven’t answered. Anything you’ve already marked, including “Not taking this on,” stays as it is.</p></div>';
       groups[g].forEach(t => sec.appendChild(taskRow(t)));
       sec.addEventListener("toggle", () => { sec.open ? openGroups.add(g) : openGroups.delete(g); });
