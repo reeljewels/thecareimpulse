@@ -38,7 +38,7 @@
   "Used medical needs, real, exaggerated, or invented, to demand more of your time and attention
   than the care requires."
 
-  Who: conduct items can come from the care recipient or someone else in the household. Any answer
+  Who: conduct items can come from the care recipient or someone else in the family or household. Any answer
   above "Never" opens an optional "Who?" choice. Absences count as conduct too ("gone quiet,
   withdrawn, or left things undone"): passive patterns put weight on the caregiver as surely as acts.
 
@@ -178,7 +178,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
     <li><a href="#history">3 How you got here</a></li>
     <li><a href="#power">4 Who holds what</a></li>
     <li><a href="#no">5 Saying no</a></li>
-    <li><a href="#between">6 Between you</a></li>
+    <li><a href="#between">6 What’s happening</a></li>
     <li><a href="#you">7 How you are</a></li>
     <li><a href="#stop">8 A break, or stopping</a></li>
     <li><a href="#readback-step">9 Read it back</a></li>
@@ -240,8 +240,8 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
 (function(){
   const FREQ = [["0","Never"],["1","Rarely"],["2","Sometimes"],["3","Often"],["4","Almost always"]];
   const FREQ_WORD = ["never","rarely","sometimes","often","almost always"];
-  const WHO = [["recipient","The person I care for"],["other","Someone else in the household"],["both","Both"]];
-  const WHO_TXT = {recipient:"the person I care for",other:"someone else in the household",both:"both"};
+  const WHO = [["recipient","The person I care for"],["other","Someone else in the family or household"],["both","Both"]];
+  const WHO_TXT = {recipient:"the person I care for",other:"someone else in the family or household",both:"both"};
   const AXIS = [["me","Me"],["them","Them"],["shared","Shared"],["other","Someone else"],["na","Doesn’t apply"]];
 
   const SECTIONS = [
@@ -284,7 +284,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
       {id:"stopped", type:"single", label:"Because of reactions like the ones above, have you stopped asking for things for yourself?", opts:[["no","No"],["some","Some things"],["yes","Yes"]]},
       {id:"avoidlearn", type:"single", label:"Have you ever deliberately avoided learning a task so you wouldn’t become the only plan?", opts:[["no","No"],["thought","I’ve thought about it"],["yes","Yes"]]}
     ]},
-    {id:"between", num:6, title:"How it goes between you", notice:true, hint:"In the past three months, how often have these happened, whether from the person you care for or someone else in the household? If you answer anything but Never, you can say who. Patterns over time matter more than any single moment.", qs:[
+    {id:"between", num:6, title:"What’s been happening", notice:true, hint:"In the past three months, how often have these happened, whether from the person you care for or someone else in the family or household? If you answer anything but Never, you can say who. Patterns over time matter more than any single moment.", qs:[
       {id:"p_insult", type:"freq", label:"Insulted, belittled, or criticized you in ways that felt hurtful"},
       {id:"p_guilt", type:"freq", label:"Used guilt to change a decision you’d made about your time, plans, or leaving"},
       {id:"p_demand", type:"freq", label:"Exaggerated or invented medical needs, or leaned on real ones, to demand more of your time and attention than the care requires"},
@@ -298,7 +298,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
       {id:"p_money", type:"freq", label:"Taken or used your money without your agreement, or pressured you to spend your own money on their needs"},
       {id:"p_employer", type:"freq", label:"If they’re officially your employer in that program, used that role as leverage, such as not signing timesheets, threatening to fire you, or expecting unpaid hours", when:s => s.paid==="ihss"},
       {id:"p_physical", type:"freq", label:"Physically hurt you, or threatened to", safety:"unsafe"},
-      {id:"driver", type:"multi", label:"When these things happen, what do you think is driving it?", help:"You don’t have to choose one. Pick as many as fit.", opts:[["symptoms","Illness: pain, breathlessness, exhaustion"],["meds","Medication or cognitive changes"],["fear","Fear"],["before","Patterns that were there before the illness"],["mix","Usually a mix"],["unsure","Not sure"]]},
+      {id:"driver", type:"multi", label:"When these things happen, what do you think is driving it?", help:"You don’t have to choose one. Pick as many as fit.", opts:[["symptoms","Illness: pain, breathlessness, exhaustion"],["meds","Medication or cognitive changes"],["fear","Fear"],["stress","Their own stress or exhaustion"],["before","Patterns that were there before the illness"],["mix","Usually a mix"],["unsure","Not sure"]]},
       {id:"prof", type:"single", label:"If you’ve raised any of this with a professional, what happened?", opts:[["never","I haven’t raised it"],["serious","It was taken seriously"],["normal","It was called normal caregiver stress"],["back","It was turned back on me"],["worse","It made things worse"]]}
     ]},
     {id:"you", num:7, title:"How you’re doing", hint:"In the past month, how often have you…", qs:[
@@ -355,7 +355,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
         return '<div class="q" data-q="'+q.id+'"><span class="q-label" id="l-'+q.id+'">'+esc(q.label)+'</span>'+
           (q.help ? '<div class="q-help">'+esc(q.help)+'</div>' : '')+(q.helpHtml ? '<div class="q-help">'+q.helpHtml+'</div>' : '')+body+
           (q.safety ? '<div class="safety" id="safe-'+q.id+'" hidden>'+SAFETY[q.safety]+'</div>' : '')+
-          (q.type==="freq" && q.id.startsWith("p_") ? '<div class="who" id="who-'+q.id+'" hidden><span class="q-help">Who?</span>'+choiceHTML({id:q.id+"_who"},"single",WHO)+'</div>' : '')+'</div>';
+          (q.type==="freq" && q.id.startsWith("p_") && q.id!=="p_employer" ? '<div class="who" id="who-'+q.id+'" hidden><span class="q-help">Who?</span>'+choiceHTML({id:q.id+"_who"},"single",WHO)+'</div>' : '')+'</div>';
       }).join("")+'</div></section>'
     ).join("");
 
@@ -383,7 +383,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
       const el = document.querySelector('[data-q="'+q.id+'"]');
       if(q.when) el.hidden = !q.when(S);
       if(q.safety) $("safe-"+q.id).hidden = !(f(q.id) >= 1);
-      if(q.type==="freq" && q.id.startsWith("p_")) $("who-"+q.id).hidden = !(f(q.id) >= 1);
+      if(q.type==="freq" && q.id.startsWith("p_") && q.id!=="p_employer") $("who-"+q.id).hidden = !(f(q.id) >= 1);
     });
     $("readback").innerHTML = readbackHTML();
   }
@@ -509,24 +509,24 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
       if(strong.length >= 2) notes.push("You reported "+strong.length+" of these at least sometimes. Patterns over time, not single incidents, are what counselors and caregiver specialists look at.");
       const drv = S.driver||[];
       if(drv.length){
-        const dn = {symptoms:"illness symptoms",meds:"medication or cognitive changes",fear:"fear",before:"patterns from before the illness",mix:"usually a mix",unsure:"you’re not sure"};
+        const dn = {symptoms:"illness symptoms",meds:"medication or cognitive changes",fear:"fear",stress:"their own stress or exhaustion",before:"patterns from before the illness",mix:"usually a mix",unsure:"you’re not sure"};
         notes.push("What you think drives it: "+list(drv.map(v => dn[v]))+".");
       }
       notes.push("You don’t have to decide whether it’s the illness or the person. Whatever the cause, the effect on you is real. Mechanism explains. It does not erase.");
-      if(S.cog==="intact" && strong.length) notes.push("You described them as cognitively intact. Many tools quietly assume difficult behavior is a symptom. If that isn’t your situation, say so plainly.");
+      if(S.cog==="intact" && strong.some(([k]) => S[k+"_who"]!=="other")) notes.push("You described them as cognitively intact. Many tools quietly assume difficult behavior is a symptom. If that isn’t your situation, say so plainly.");
       if(has("driver","before")) notes.push("If these patterns were there before the illness, that history matters. Tell whoever you show this to.");
       if(S.prof==="normal") notes.push("When you raised it before, it was called normal caregiver stress.");
       else if(S.prof==="back") notes.push("When you raised it before, it was turned back on you.");
       else if(S.prof==="worse") notes.push("When you raised it before, it made things worse. That’s a reason to choose carefully who you share this with next, not a reason to stop.");
       else if(S.prof==="serious") notes.push("When you raised it before, it was taken seriously.");
-      add('<div class="sec">How it goes between you (past three months)</div><ul>'+items.map(i => '<li>'+esc(i)+'</li>').join("")+'</ul>'+notes.map(n => '<p class="aside">'+esc(n)+'</p>').join(""),
-        "HOW IT GOES BETWEEN US (past three months)\n"+items.map(i => "  - "+i).join("\n")+"\n  "+notes.join("\n  ")+"\n");
+      add('<div class="sec">What’s been happening (past three months)</div><ul>'+items.map(i => '<li>'+esc(i)+'</li>').join("")+'</ul>'+notes.map(n => '<p class="aside">'+esc(n)+'</p>').join(""),
+        "WHAT'S BEEN HAPPENING (past three months)\n"+items.map(i => "  - "+i).join("\n")+"\n  "+notes.join("\n  ")+"\n");
     } else {
       const vis = PAT.filter(([k]) => !(k==="p_employer" && S.paid!=="ihss"));
       const nevers = vis.filter(([k]) => f(k)===0).length;
       if(nevers){
         const msg = nevers===vis.length ? "You answered “never” to all of these for the past three months." : "You answered “never” to "+nevers+" of these "+vis.length+" and skipped the rest.";
-        add('<div class="sec">How it goes between you</div><p>'+esc(msg)+'</p>', "HOW IT GOES BETWEEN US\n  "+msg+"\n");
+        add('<div class="sec">What’s been happening</div><p>'+esc(msg)+'</p>', "WHAT'S BEEN HAPPENING\n  "+msg+"\n");
       }
     }
 
