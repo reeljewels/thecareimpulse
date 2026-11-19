@@ -151,6 +151,11 @@ button.quiet{background:transparent;border-color:transparent;color:var(--muted);
 
 /* Uncovered */
 .uncovered-empty{color:var(--muted)}
+.nosave{background:var(--sunk,#F2EEE9);border-radius:10px;padding:10px 14px;margin:0 0 14px;font-size:16px}
+.nosave label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.nosave input{width:20px;height:20px;flex:none}
+.nosave p{margin:6px 0 0;font-size:14px;color:var(--muted)}
+.uncov .cover{margin-top:6px;width:100%;font:inherit;font-size:15px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);min-height:40px}
 ul.uncov{list-style:none;margin:0;padding:0}
 ul.uncov li{padding:12px 14px;border-radius:10px;background:var(--decline-soft);margin-bottom:8px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 ul.uncov li.ut{background:var(--untrained-soft)}
@@ -227,7 +232,8 @@ html{scroll-behavior:smooth}
 
   <section class="step" id="you">
     <div class="step-head"><span class="step-num">1</span><h2>You and this record</h2></div>
-    <p class="hint">Everything you enter stays on this device. Nothing is sent anywhere unless you send it. Your answers are saved in this browser so you can come back to them. On a shared or hospital computer, download your record when you’re done, then use Start over to clear it.</p>
+    <p class="hint">Everything you enter stays on this device. Nothing is sent anywhere unless you send it. Your answers are saved in this browser so you can come back to them. On a shared or hospital computer, or a family device others in the household can open, download your record when you’re done, then use Start over to clear it. Or turn off saving below.</p>
+    <div class="nosave"><label><input type="checkbox" id="nosave"> <strong>Don’t save my answers on this device</strong></label><p>Turning this on erases anything already saved here, and nothing new is saved. Your answers disappear when you close the page, so download or print your record first. You’ll need to turn this on again each visit.</p></div>
     <div class="card grid">
       <div style="grid-column:1/-1"><span class="f" id="setting-l" style="display:block;font-weight:700;margin-bottom:6px">Where is this care being planned?</span><div class="yn" role="radiogroup" aria-labelledby="setting-l"><label class="choice agree"><input type="radio" name="setting" value="hospital"><span>Hospital or discharge</span></label><label class="choice agree"><input type="radio" name="setting" value="clinic"><span>Clinic or ongoing care</span></label><label class="choice agree"><input type="radio" name="setting" value="family"><span>Family, at home</span></label></div></div>
       <div><label class="f" for="caregiver">Your name</label><input type="text" id="caregiver" autocomplete="name"></div>
@@ -380,10 +386,11 @@ html{scroll-behavior:smooth}
   const $ = id => document.getElementById(id);
   const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
-  let state = {fields:{}, tasks:{}, custom:[], overnight:"", oncall:"", setting:"hospital"};
+  let state = {fields:{}, tasks:{}, custom:[], cover:{}, overnight:"", oncall:"", setting:"hospital"};
+  let noSave = false;
   try{ const raw = localStorage.getItem(KEY); if(raw){ state = Object.assign(state, JSON.parse(raw)); } }catch(e){}
 
-  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  function save(){ if(noSave) return; try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
 
   function today(){ const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
   function plusDays(iso,n){ const d=new Date(iso+"T12:00:00"); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
@@ -503,9 +510,15 @@ html{scroll-behavior:smooth}
     host.innerHTML = '<ul class="uncov">'+gaps.map(t => {
       const r = state.tasks[t.id].resp;
       const n = r==="untrained" ? (state.tasks[t.id].note||"").trim() : "";
-      return '<li class="'+(r==="untrained"?"ut":"")+'"><span>'+esc(t.name+(n?" ("+n+")":""))+'</span><span class="tag">'+(r==="untrained"?"Needs training or another provider":"Needs another plan")+'</span></li>';
-    }).join("")+'</ul><p class="hint" style="margin:12px 0 0">“Family will manage” isn’t a plan unless a named person has agreed in writing.</p>';
+      return '<li class="'+(r==="untrained"?"ut":"")+'"><span>'+esc(t.name+(n?" ("+n+")":""))+'</span><span class="tag">'+(r==="untrained"?"Needs training or another provider":"Needs another plan")+'</span>' +
+        '<input type="text" class="cover" data-id="'+esc(t.id)+'" value="'+esc((state.cover||{})[t.id]||"")+'" placeholder="Who has agreed to cover this? (optional)" aria-label="Who has agreed to cover '+esc(t.name)+'"></li>';
+    }).join("")+'</ul><p class="hint" style="margin:12px 0 0">Only name someone who has agreed. “Family will manage” isn’t a plan unless a named person has agreed in writing. Blank ones show as “to be named.”</p>';
+    host.querySelectorAll("input.cover").forEach(inp => inp.addEventListener("input", () => {
+      state.cover = state.cover || {}; state.cover[inp.dataset.id] = inp.value; save(); renderRecord(); renderEmail();
+    }));
   }
+  function gapTasks(){ return answered().filter(t => ["decline","untrained"].includes(state.tasks[t.id].resp)); }
+  function coverOf(t){ return ((state.cover||{})[t.id]||"").trim(); }
 
   function availabilityRows(){
     const f = state.fields, rows = [];
@@ -596,7 +609,7 @@ html{scroll-behavior:smooth}
         '</tbody></table>' : '<p class="tag">Nothing marked yet.</p>') +
       secList("Not selected, so not offered", notSelected(), "") +
       secList("Doesn’t apply", byResp("na"), "") +
-      '<div class="keep"><div class="sec">Coordination and backup still to be confirmed</div><table><tbody><tr><td>Coordinating care</td><td>'+esc(f.coordinator||"To be named")+'</td></tr><tr><td>Backup when I’m unavailable</td><td>'+esc(f.backupPerson||"To be named")+'</td></tr><tr><td>Covering tasks I’m not taking on or not trained for</td><td>To be named</td></tr><tr><td>Reviewing this plan before it expires</td><td>To be named</td></tr></tbody></table></div>' +
+      '<div class="keep"><div class="sec">Coordination and backup still to be confirmed</div><table><tbody><tr><td>Coordinating care</td><td>'+esc(f.coordinator||"To be named")+'</td></tr><tr><td>Backup when I’m unavailable</td><td>'+esc(f.backupPerson||"To be named")+'</td></tr>'+(gapTasks().length ? gapTasks().map(t => '<tr><td>Covering: '+esc(t.name)+'</td><td>'+esc(coverOf(t)||"To be named")+'</td></tr>').join("") : '')+'<tr><td>Reviewing this plan before it expires</td><td>To be named</td></tr></tbody></table></div>' +
       (av.length ? '<div class="sec">Time and availability</div><table><tbody>'+av.map(([k,v]) => '<tr><td>'+esc(k)+'</td><td>'+esc(v)+'</td></tr>').join("")+'</tbody></table>' : '') +
       (f.conditions ? '<div class="sec">Conditions and support needed</div><p>'+esc(f.conditions)+'</p>' : '') +
       (f.context ? '<div class="keep"><div class="sec">Context for the care team</div><p>'+esc(f.context)+'</p></div>' : '') +
@@ -617,7 +630,7 @@ html{scroll-behavior:smooth}
     if(groups.untrained.length){ lines.push("I have not been trained for (training or another provider is needed):"); withNote(groups.untrained).forEach(t => lines.push("  - "+t.name)); lines.push(""); }
     if(groups.agree.length){ lines.push("I’m open to helping with:"); groups.agree.forEach(t => lines.push("  - "+t.name)); lines.push(""); }
     if(groups.limits.length){ lines.push("I’m open to helping, with these limits:"); groups.limits.forEach(t => lines.push("  - "+t.name+(state.tasks[t.id].limits?" ("+state.tasks[t.id].limits+")":" (limits not stated)"))); lines.push(""); }
-    lines.push("Coordination and backup still to be confirmed:"); lines.push("  - Coordinating care: "+(f.coordinator||"to be named")); lines.push("  - Backup when I’m unavailable: "+(f.backupPerson||"to be named")); lines.push("  - Covering tasks I’m not taking on or not trained for: to be named"); lines.push("  - Reviewing this plan before it expires: to be named"); lines.push("");
+    lines.push("Coordination and backup still to be confirmed:"); lines.push("  - Coordinating care: "+(f.coordinator||"to be named")); lines.push("  - Backup when I’m unavailable: "+(f.backupPerson||"to be named")); gapTasks().forEach(t => lines.push("  - Covering "+t.name+": "+(coverOf(t)||"to be named"))); lines.push("  - Reviewing this plan before it expires: to be named"); lines.push("");
     const unl = notAgreed();
     const ns = notSelected(), na = byResp("na");
     if(ns.length){ lines.push("Not selected, so not offered:"); lines.push("  "+ns.map(t => t.name).join(", ")); lines.push(""); }
@@ -713,11 +726,17 @@ html{scroll-behavior:smooth}
   $("reset").addEventListener("click", () => {
     if(!confirm("Clear everything on this device and start over?")) return;
     try{ localStorage.removeItem(KEY); }catch(e){}
-    state = {fields:{start:today()}, tasks:{}, custom:[], overnight:"", oncall:"", setting:"hospital", startAuto:true};
+    state = {fields:{start:today()}, tasks:{}, custom:[], cover:{}, overnight:"", oncall:"", setting:"hospital", startAuto:true};
     FIELDS.forEach(f => $(f).value = state.fields[f] || "");
     document.querySelectorAll('input[name="overnight"],input[name="oncall"]').forEach(r => r.checked=false);
     openGroups = null; syncSetting(); renderTasks(); refresh(); status("Cleared.");
     window.scrollTo(0,0);
+  });
+
+  $("nosave").addEventListener("change", e => {
+    noSave = e.target.checked;
+    if(noSave){ try{ localStorage.removeItem(KEY); }catch(err){} status("Saving is off. Anything saved here was erased. Download or print before you close the page."); }
+    else { save(); status("Saving is back on for this browser."); }
   });
 
   syncSetting(); renderTasks(); refresh();
