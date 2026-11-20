@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'">
 <title>Caregiver Scope and Consent Record | The Care Impulse</title>
 <meta name="description" content="A free tool for unpaid family caregivers to put in writing what they can help with, what they can’t, and for how long. Nothing you enter leaves your device.">
 <meta property="og:title" content="Caregiver Scope and Consent Record">
@@ -17,9 +18,9 @@
 <link rel="canonical" href="https://thecareimpulse.com/consent/">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20400%22%3E%3Cg%20transform%3D%22translate%280%2090%29%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20stroke%3D%22%232B6696%22%20stroke-width%3D%2218%22%20d%3D%22M10%20150%20H48%20L62%2052%20L78%20205%20L92%20122%20L104%20156%20H186%20L150%20116%20C118%2084%20126%2026%20165%2024%20C186%2023%20197%2038%20200%2052%20C203%2038%20214%2023%20235%2024%20C274%2026%20282%2084%20250%20116%20L214%20156%20H296%20L312%20182%20L330%2050%20L346%20160%20L356%20150%20H390%22%2F%3E%3Cpath%20stroke%3D%22%23E3F2FB%22%20stroke-width%3D%226%22%20d%3D%22M10%20150%20H48%20L62%2052%20L78%20205%20L92%20122%20L104%20156%20H186%20L150%20116%20C118%2084%20126%2026%20165%2024%20C186%2023%20197%2038%20200%2052%20C203%2038%20214%2023%20235%2024%20C274%2026%20282%2084%20250%20116%20L214%20156%20H296%20L312%20182%20L330%2050%20L346%20160%20L356%20150%20H390%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
 <style>
-@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/atkinson-hyperlegible-latin-400-normal.woff2") format("woff2")}
-@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:700;font-display:swap;src:url("fonts/atkinson-hyperlegible-latin-700-normal.woff2") format("woff2")}
-@font-face{font-family:"Atkinson Hyperlegible";font-style:italic;font-weight:400;font-display:swap;src:url("fonts/atkinson-hyperlegible-latin-400-italic.woff2") format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:400;font-display:swap;src:url("/consent/fonts/atkinson-hyperlegible-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:700;font-display:swap;src:url("/consent/fonts/atkinson-hyperlegible-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-style:italic;font-weight:400;font-display:swap;src:url("/consent/fonts/atkinson-hyperlegible-latin-400-italic.woff2") format("woff2")}
 :root{
   --bg:#FAF8F6; --surface:#FFFFFF; --sunk:#F2EEE9; --ink:#222222; --muted:#5C5752; --line:#E3DDD6;
   --kelp:#2B6696; --kelp-ink:#FFFFFF; --kelp-soft:#DDEBF6; --link:#9E561A; --logo-out:#9CCAE6; --logo-in:#E3F2FB;
@@ -390,7 +391,7 @@ html{scroll-behavior:smooth}
   let noSave = false;
   try{ const raw = localStorage.getItem(KEY); if(raw){ state = Object.assign(state, JSON.parse(raw)); } }catch(e){}
 
-  function save(){ if(noSave) return; try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  function save(){ if(noSave) return; if(state.cover){ Object.keys(state.cover).forEach(id => { const r = (state.tasks[id]||{}).resp; if(!["decline","untrained"].includes(r) || !String(state.cover[id]).trim()) delete state.cover[id]; }); } try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
 
   function today(){ const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
   function plusDays(iso,n){ const d=new Date(iso+"T12:00:00"); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
@@ -533,6 +534,14 @@ html{scroll-behavior:smooth}
     return rows;
   }
 
+  function isOffered(id){ const r = state.tasks[id]; return !!r && ["agree","limits"].includes(r.resp); }
+  function conflictLines(){
+    const out = [];
+    if(isOffered("overnight") && state.overnight === "no") out.push("Overnight answers conflict: open to overnight supervision as a task, but “No” to overnight care. Confirm with the caregiver before planning on any overnight help.");
+    if(isOffered("backup") && state.oncall === "no") out.push("Emergency answers need clarifying: open to being emergency backup, but “No” to being contacted in emergencies. Ask the caregiver what they are offering before listing them as backup.");
+    return out;
+  }
+
   function withNote(arr){ return arr.map(t => { const n = ((state.tasks[t.id]||{}).note||"").trim(); return Object.assign({}, t, {name: t.name + (n ? " ("+n+")" : "")}); }); }
   function notAgreed(){ return allTasks().filter(t => { const r = state.tasks[t.id]; return !r || !r.resp || r.resp === "na"; }); }
   function byResp(v){ return allTasks().filter(t => state.tasks[t.id] && state.tasks[t.id].resp === v); }
@@ -555,7 +564,6 @@ html{scroll-behavior:smooth}
     const day = parseFloat(f.perDay);
     if((state.overnight === "yes" || state.oncall === "yes") && ((wk && wk < 20) || (day && day < 8))) msgs.push("Your time budget may not match your availability. Overnight care or emergency availability usually takes far more than "+(wk ? wk+" hours a week" : day+" hours a day")+". A care team may read the smaller number as a mistake, or ignore it.");
     if(ids.includes("backup") && state.oncall === "no") msgs.push("You’re open to emergency backup but said you can’t be contacted in emergencies. The team may assume you can.");
-    if(ids.includes("overnight") && state.overnight === "no") msgs.push("You’re open to overnight supervision but said no to overnight care. Check which one you mean.");
     if(agreed.length >= 8 && wk && wk < 10) msgs.push("You’re open to helping with "+agreed.length+" tasks within "+wk+" hours a week. That may not be realistic, and the team may plan around the tasks rather than the hours.");
     return msgs;
   }
@@ -590,6 +598,7 @@ html{scroll-behavior:smooth}
     const pd = parseFloat(f.perDay), pw = parseFloat(f.perWeek);
     if(pd > 24) warn.push("Maximum hours per day can’t be more than 24.");
     if(pw > 168) warn.push("Maximum hours per week can’t be more than 168.");
+    if(isOffered("overnight") && state.overnight === "no") warn.push("Your overnight answers conflict: you’re open to overnight supervision (step 2) but said no to overnight care (step 3). Change one, or the record will tell the team to confirm with you before planning on overnight help.");
     if(pd && pw && pw > pd * 7) warn.push("Your weekly maximum is more than seven times your daily maximum. Check both numbers.");
     const load = loadNotes(list);
     $("record-warn").innerHTML = (warn.length ? '<div class="warn">'+warn.map(esc).join("<br>")+'</div>' : "") + (load.length ? '<div class="note"><strong>Before you send this</strong><ul>'+load.map(m => '<li>'+esc(m)+'</li>').join("")+'</ul><p>This is only a check-in. You decide what you can carry.</p></div>' : "");
@@ -611,6 +620,7 @@ html{scroll-behavior:smooth}
       secList("Doesn’t apply", byResp("na"), "") +
       '<div class="keep"><div class="sec">Coordination and backup still to be confirmed</div><table><tbody><tr><td>Coordinating care</td><td>'+esc(f.coordinator||"To be named")+'</td></tr><tr><td>Backup when I’m unavailable</td><td>'+esc(f.backupPerson||"To be named")+'</td></tr>'+(gapTasks().length ? gapTasks().map(t => '<tr><td>Covering: '+esc(t.name)+'</td><td>'+esc(coverOf(t)||"To be named")+'</td></tr>').join("") : '')+'<tr><td>Reviewing this plan before it expires</td><td>To be named</td></tr></tbody></table></div>' +
       (av.length ? '<div class="sec">Time and availability</div><table><tbody>'+av.map(([k,v]) => '<tr><td>'+esc(k)+'</td><td>'+esc(v)+'</td></tr>').join("")+'</tbody></table>' : '') +
+      (conflictLines().length ? '<div class="keep"><div class="sec">To confirm with the caregiver</div><ul style="margin:0 0 12px;padding-left:20px">'+conflictLines().map(c => '<li>'+esc(c)+'</li>').join("")+'</ul></div>' : '') +
       (f.conditions ? '<div class="sec">Conditions and support needed</div><p>'+esc(f.conditions)+'</p>' : '') +
       (f.context ? '<div class="keep"><div class="sec">Context for the care team</div><p>'+esc(f.context)+'</p></div>' : '') +
       '<div class="stmt">'+STATEMENT.map(s => '<p style="margin:0 0 6px">'+esc(s)+'</p>').join("")+'</div>' +
@@ -637,6 +647,8 @@ html{scroll-behavior:smooth}
     if(na.length){ lines.push("Doesn’t apply:"); lines.push("  "+na.map(t => t.name).join(", ")); lines.push(""); }
     const av = availabilityRows();
     if(av.length){ lines.push("Time and availability:"); av.forEach(([k,v]) => lines.push("  - "+k+": "+v)); lines.push(""); }
+    const cf = conflictLines();
+    if(cf.length){ lines.push("To confirm with the caregiver:"); cf.forEach(c => lines.push("  - "+c)); lines.push(""); }
     if(f.conditions){ lines.push("Conditions and support needed:"); lines.push("  "+f.conditions); lines.push(""); }
     if(f.context){ lines.push("Context for the care team:"); lines.push("  "+f.context); lines.push(""); }
     STATEMENT.forEach(s => lines.push(s));
