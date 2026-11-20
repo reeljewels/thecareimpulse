@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Caregiver Review | The Care Impulse</title>
+<meta name="description" content="An optional follow-up for people who used the Caregiver Scope and Consent Record: tell us what happened after you shared it.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://thecareimpulse.com/consent/pilot/">
+<style>
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:400;font-display:swap;src:url("/consent/fonts/atkinson-hyperlegible-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:700;font-display:swap;src:url("/consent/fonts/atkinson-hyperlegible-latin-700-normal.woff2") format("woff2")}
+:root{--bg:#FAF8F6;--surface:#FFFFFF;--ink:#222222;--muted:#5C5752;--line:#E3DDD6;--kelp:#2B6696;--kelp-ink:#FFFFFF;--kelp-soft:#DDEBF6;--link:#9E561A;--focus:#1D5FBF;--serif:Georgia,"Times New Roman",serif;--sans:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#16181B;--surface:#1E2125;--ink:#ECE8E2;--muted:#ABA49C;--line:#363B41;--kelp:#8CC3EA;--kelp-ink:#16181B;--kelp-soft:#22384A;--link:#E3A86E;--focus:#8DB6FF;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#16181B;--surface:#1E2125;--ink:#ECE8E2;--muted:#ABA49C;--line:#363B41;--kelp:#8CC3EA;--kelp-ink:#16181B;--kelp-soft:#22384A;--link:#E3A86E;--focus:#8DB6FF;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:720px;margin:0 auto;padding:32px 16px 56px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,6vw,38px);line-height:1.2;margin:0 0 8px}
+h2{font-family:var(--serif);font-weight:400;font-size:24px;margin:32px 0 8px}
+.kicker{color:var(--muted);font-size:15px;margin:0 0 20px}
+.lead{font-size:20px}
+a{color:var(--link)}
+a:focus-visible,.button:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:18px 0}
+ol,ul{padding-left:22px}
+li{margin:0 0 8px}
+.opts{color:var(--muted);font-size:16px;display:block}
+.button{display:inline-block;background:var(--kelp);color:var(--kelp-ink);text-decoration:none;font-weight:700;padding:12px 20px;border-radius:999px;margin-top:6px}
+.closed{background:var(--kelp-soft);border-radius:12px;padding:14px 16px}
+footer{color:var(--muted);font-size:15px;margin-top:40px;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker"><a href="/consent/">Caregiver Scope and Consent Record</a> · Caregiver review</p>
+  <h1>What happened after you shared it?</h1>
+  <p class="lead">If you used the Caregiver Scope and Consent Record, a few short answers can show whether it does what it’s meant to: help caregivers say what they can and can’t take on, and help care teams see tasks nobody has agreed to cover.</p>
+
+  <div class="card">
+    <p style="margin-top:0"><strong>Joining is optional.</strong> You already have everything the form offers. Saying no to this changes nothing.</p>
+    <p style="margin-bottom:0"><strong>Your record is not sent to us.</strong> Nothing you entered in the form leaves your device. These questions ask only what happened afterward. Please don’t include names, hospitals, or medical details in your answers.</p>
+  </div>
+
+  <h2>The questions</h2>
+  <p>Answer whenever you’re ready. A few weeks after you share your record is a good time. “Not yet” and “I don’t know” are real answers, so you never need to chase down a chart to respond.</p>
+  <ol>
+    <li>Did you share your record? <span class="opts">With a nurse or case manager · a doctor · family · someone else · not yet</span></li>
+    <li>Did anyone on the care team discuss it with you? <span class="opts">Yes · briefly · no · not yet</span></li>
+    <li>As far as you know, was it added to the chart? <span class="opts">Yes · no · they declined · I don’t know</span></li>
+    <li>Did anything change about who was expected to do what? <span class="opts">A task was reassigned · a referral or service was arranged · a gap was named but not filled · nothing changed · not yet · I don’t know</span></li>
+    <li>Anything else you want us to know? <span class="opts">Optional</span></li>
+  </ol>
+
+  <div id="go"></div>
+
+  <h2>How answers are used</h2>
+  <p>Answers are anonymous: the questionnaire does not ask for your name or email, and it isn’t linked to your record. Results may be summarized to improve the form and to show care teams and policymakers whether it helps, never with anything that identifies you.</p>
+  <p>This is offered as part of a review with partner organizations. If you were invited by one, they may send you a single reminder, and they can tell you more about the review.</p>
+
+  <footer>
+    <p>Agreeing to answer these questions is not agreement to anything else.</p>
+    <p>A project of <a href="https://thecareimpulse.com">The Care Impulse</a> by Ginny Lee Sayre. Questions? <a href="mailto:thecareimpulse@gmail.com">thecareimpulse@gmail.com</a></p>
+  </footer>
+</main>
+<script>
+  // Paste the follow-up questionnaire link here (Google Form) when the review opens. Leave empty to keep it closed.
+  // Ready to use: "https://forms.gle/uP3gwyb75UNC4AsU6"
+  var SURVEY = "";
+  var go = document.getElementById("go");
+  go.innerHTML = SURVEY
+    ? '<p><a class="button" href="'+SURVEY+'" rel="noopener">Answer the questions</a></p>'
+    : '<p class="closed">The questions open when the review begins. Check back soon, or watch for a note from the organization that invited you.</p>';
+</script>
+</body>
+</html>
