@@ -205,6 +205,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
           <li>Sexual violence, which this tool doesn’t ask about: National Sexual Assault Hotline, <a href="tel:18006564673">1-800-656-4673</a>.</li>
         </ul>
         <span style="display:block;margin-top:6px;font-size:14px">The hotlines and 211 are free and open 24/7. 911 is for emergencies and will send help. If privacy matters to you, you can ask any line what they keep or share.</span></div>
+      <div class="omit" style="margin:0 0 12px"><strong>First: can you answer this without being seen or overheard?</strong> That includes the person you care for, and anyone who might tell them.<label class="chk"><input type="radio" name="privacy" id="priv_yes" value="yes"> Yes, I’m private right now</label><label class="chk"><input type="radio" name="privacy" id="priv_no" value="no"> No, or I’m not sure</label><span class="aside" id="privacy_note" hidden>It’s fine to stop here and come back when you’re alone. Quick exit, or Shift and Escape together, clears the page in one step. In a clinic or office, you can ask to fill this out in a private room, or to talk without the person you care for in the room.</span></div>
       <p style="margin:0 0 10px"><strong>Go at your own pace.</strong> Remembering all of this can bring things up, sometimes more than you expect. That’s a normal reaction, not a sign something’s wrong with you. Every question is optional. You can skip anything, stop, or come back another time. If it stirs up a lot, talk to someone you trust, or call or text <a href="tel:988">988</a>.</p>
       <p style="margin:0 0 10px"><strong>This is yours.</strong> It isn’t signed by the person you care for, and it isn’t sent anywhere. You decide if anyone else sees it.</p>
       <p style="margin:0 0 10px"><strong>Nothing is saved.</strong> If you close or refresh this page, your answers are gone. That’s on purpose. In a shared household, saved answers can be found. To keep a copy, print it or save it as a PDF at the end, and store it somewhere only you can open.</p>
@@ -219,8 +220,9 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
   <section class="step" id="readback-step">
     <div class="step-head"><span class="step-num">9</span><h2>Read it back</h2></div>
     <p class="hint">This is what you reported, in plain language. Read it slowly. Many caregivers have never seen the whole picture in one place, and seeing it can hit hard. If it does, you don’t have to sort it out alone: talk to someone you trust, or call or text <a href="tel:988">988</a>.</p>
-    <div class="omit noprint"><strong>Making a copy to share?</strong> You can leave these out of the printed or copied version:<br><label class="chk"><input type="checkbox" id="omit_temper"> My answer about temper</label><label class="chk"><input type="checkbox" id="omit_self"> My answer about self-harm</label><label class="chk" id="flag_wrap" hidden><input type="checkbox" id="flag_omit" checked> Note on the copy that some answers were left out</label><span class="aside">Before you share, ask the person what they’d be required to report.</span></div>
+    <div class="omit noprint"><strong>Making a copy to share?</strong> You can leave these out of the printed or copied version:<br><label class="chk"><input type="checkbox" id="omit_temper"> My answer about temper</label><label class="chk"><input type="checkbox" id="omit_self"> My answer about self-harm</label><label class="chk"><input type="checkbox" id="omit_safety"> My answers about physical harm, threats, and feeling unsafe</label><label class="chk" id="flag_wrap" hidden><input type="checkbox" id="flag_omit" checked> Note on the copy that some answers were left out</label><span class="aside">Before you share, ask the person what they’d be required to report.</span></div>
     <div class="readback" id="readback"></div>
+    <p class="hint noprint">Printing: most browsers add this page’s web address and the date in the margins. To leave them off, turn off “Headers and footers” in the print settings. If you save a PDF, you can give it a plain file name.</p>
     <div class="actions">
       <button type="button" class="primary" id="print">Print or save as PDF</button>
       <button type="button" id="copy">Copy as text</button>
@@ -489,7 +491,8 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
 
     // Saying no
     const no = [];
-    const after = (S.after||[]).filter(v => AFTER[v]);
+    const omitSafe = $("omit_safety").checked;
+    const after = (S.after||[]).filter(v => AFTER[v] && !(omitSafe && v==="threat"));
     if(after.length) no.push("When you say no or set a limit, what usually follows: "+list(after.map(v => AFTER[v]))+".");
     if(has("after","dontask")) no.push("You said you don’t say no anymore, or never could.");
     if(S.safe_no) no.push("Saying no feels "+({safe:"safe",mostly:"mostly safe",uneasy:"uneasy",unsafe:"not safe"})[S.safe_no]+".");
@@ -501,7 +504,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
     if(no.length) add('<div class="sec">Saying no</div><p>'+no.map(esc).join(" ")+'</p>'+[noNote,noNote2].filter(Boolean).map(n => '<p class="aside">'+esc(n)+'</p>').join(""), "SAYING NO\n  "+no.join(" ")+[noNote,noNote2].filter(Boolean).map(n => "\n  "+n).join("")+"\n");
 
     // Patterns
-    const pats = PAT.filter(([k]) => f(k) >= 1 && !(k==="p_employer" && S.paid!=="ihss"));
+    const pats = PAT.filter(([k]) => f(k) >= 1 && !(k==="p_employer" && S.paid!=="ihss") && !(omitSafe && k==="p_physical"));
     const strong = pats.filter(([k]) => f(k) >= 2);
     if(pats.length){
       const items = pats.map(([k,l]) => l.charAt(0).toUpperCase()+l.slice(1)+": "+FREQ_WORD[f(k)]+(S[k+"_who"] ? " ("+WHO_TXT[S[k+"_who"]]+")" : ""));
@@ -522,7 +525,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
       add('<div class="sec">What’s been happening (past three months)</div><ul>'+items.map(i => '<li>'+esc(i)+'</li>').join("")+'</ul>'+notes.map(n => '<p class="aside">'+esc(n)+'</p>').join(""),
         "WHAT'S BEEN HAPPENING (past three months)\n"+items.map(i => "  - "+i).join("\n")+"\n  "+notes.join("\n  ")+"\n");
     } else {
-      const vis = PAT.filter(([k]) => !(k==="p_employer" && S.paid!=="ihss"));
+      const vis = PAT.filter(([k]) => !(k==="p_employer" && S.paid!=="ihss") && !(omitSafe && k==="p_physical"));
       const nevers = vis.filter(([k]) => f(k)===0).length;
       if(nevers){
         const msg = nevers===vis.length ? "You answered “never” to all of these for the past three months." : "You answered “never” to "+nevers+" of these "+vis.length+" and skipped the rest.";
@@ -531,7 +534,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
     }
 
     // Self
-    const omitted = []; if($("omit_temper").checked) omitted.push("s_temper"); if($("omit_self").checked) omitted.push("s_self");
+    const omitted = []; if($("omit_temper").checked) omitted.push("s_temper"); if($("omit_self").checked) omitted.push("s_self"); if(omitSafe) omitted.push("s_unsafe","p_physical");
     $("flag_wrap").hidden = !omitted.length;
     const selfs = SELF.filter(([k]) => f(k) >= 1 && !omitted.includes(k));
     if(selfs.length){
@@ -562,7 +565,8 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
     // Next steps
     const nx = [];
     if(f("s_self") >= 1 && !omitted.includes("s_self")) nx.push('<strong>Today:</strong> call or text <a href="tel:988">988</a>. You said you’ve had thoughts of being better off not here or of hurting yourself. That comes before everything else on this page.');
-    if(f("p_physical") >= 1 || f("s_unsafe") >= 1 || has("after","threat")) nx.push('<strong>Safety first:</strong> if you’re in danger, call 911. For safety planning: spouse or partner, the National Domestic Violence Hotline (<a href="tel:18007997233">1-800-799-7233</a>); a parent, adult child, or other relative, <a href="tel:211">211</a> for local family-violence services.');
+    const safetyHit = f("p_physical") >= 1 || f("s_unsafe") >= 1 || has("after","threat");
+    if(safetyHit && !omitSafe) nx.push('<strong>Safety first:</strong> if you’re in danger, call 911. For safety planning: spouse or partner, the National Domestic Violence Hotline (<a href="tel:18007997233">1-800-799-7233</a>); a parent, adult child, or other relative, <a href="tel:211">211</a> for local family-violence services.');
     nx.push('<strong>A caregiver support center.</strong> They’re free, they focus on the caregiver, and they’re used to this conversation. In California, the statewide Caregiver Resource Centers; in the Bay Area, that’s Family Caregiver Alliance (caregiver.org). Elsewhere, the Eldercare Locator (<a href="tel:18006771116">1-800-677-1116</a>) can point you to one.');
     if(S.paid==="ihss" && h && h > ph) nx.push('<strong>A reassessment of your paid hours.</strong> In California that’s IHSS; other states have their own programs. Bring your hours. The gap between authorized and actual hours stays invisible unless someone writes it down. Ask to speak with the county social worker privately, not in front of the person you care for.');
     if(S.respite==="never" || S.respite==="once" || S.dayoff==="year" || S.dayoff==="never") nx.push('<strong>Respite.</strong> Ask the support center or the care team’s social worker what respite is available. Asking isn’t abandoning anyone.');
@@ -572,6 +576,7 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
     add('<div class="sec">Where this could go</div><ul>'+nx.map(n => '<li>'+n+'</li>').join("")+'</ul>', "WHERE THIS COULD GO\n"+nx.map(n => "  - "+n.replace(/<[^>]+>/g,"")).join("\n")+"\n");
 
     if(omitted.includes("s_self") && f("s_self") >= 1) out.push('<div class="safety noprint"><strong>Only on your screen, not in the copy:</strong> you said you’ve had thoughts of being better off not here or of hurting yourself. Call or text <a href="tel:988">988</a> any time. Keep a version of this for yourself that includes it.</div>');
+    if(omitSafe && safetyHit) out.push('<div class="safety noprint"><strong>Only on your screen, not in the copy:</strong> you said someone has hurt or threatened you, or that you’ve felt unsafe at home. If you’re in danger, call <a href="tel:911">911</a>. For safety planning: spouse or partner, the National Domestic Violence Hotline (<a href="tel:18007997233">1-800-799-7233</a>); a parent, adult child, or other relative, <a href="tel:211">211</a>. Keep a version of this for yourself that includes it.</div>');
     if(omitted.length && $("flag_omit").checked) add('<p class="aside">Some answers were left out of this copy by choice.</p>', "Some answers were left out of this copy by choice.");
     add('<p class="aside" style="margin-top:18px">This is a record of what I reported. It isn’t a diagnosis of anyone, and it isn’t a finding that anyone is abusive. Private prototype, not validated.</p>', "This is a record of what I reported. It isn't a diagnosis of anyone, and it isn't a finding that anyone is abusive. Private prototype, not validated.");
     PLAIN = plain.join("\n");
@@ -580,7 +585,8 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
   let PLAIN = "";
 
   function wipe(){
-    S = {}; PLAIN = ""; $("omit_temper").checked = false; $("omit_self").checked = false; $("flag_omit").checked = true;
+    S = {}; PLAIN = ""; $("omit_temper").checked = false; $("omit_self").checked = false; $("omit_safety").checked = false; $("flag_omit").checked = true;
+    $("priv_yes").checked = false; $("priv_no").checked = false; $("privacy_note").hidden = true;
     document.querySelectorAll("#questions input, #questions textarea").forEach(el => { if(el.type==="radio"||el.type==="checkbox") el.checked = false; else el.value = ""; });
     update();
   }
@@ -595,10 +601,11 @@ footer{margin-top:56px;color:var(--muted);font-size:15px;border-top:1px solid va
   $("clear").addEventListener("click", () => { wipe(); $("status").textContent = "Cleared."; window.scrollTo(0,0); });
 
   render(); update();
-  document.querySelectorAll("#questions input, #questions textarea, #omit_temper, #omit_self, #flag_omit").forEach(el => el.setAttribute("autocomplete","off"));
+  document.querySelectorAll("#questions input, #questions textarea, #omit_temper, #omit_self, #omit_safety, #flag_omit, #priv_yes, #priv_no").forEach(el => el.setAttribute("autocomplete","off"));
+  ["priv_yes","priv_no"].forEach(id => $(id).addEventListener("change", () => { $("privacy_note").hidden = !$("priv_no").checked; }));
   window.addEventListener("pageshow", e => { if(e.persisted) wipe(); });
   window.addEventListener("pagehide", () => wipe());
-  ["omit_temper","omit_self","flag_omit"].forEach(id => $(id).addEventListener("change", update));
+  ["omit_temper","omit_self","omit_safety","flag_omit"].forEach(id => $(id).addEventListener("change", update));
 })();
 </script>
 </body>
